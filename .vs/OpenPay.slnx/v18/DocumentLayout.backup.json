@@ -1,0 +1,428 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.web\\pages\\payments\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|solutionrelative:openpay.web\\pages\\payments\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.web\\pages\\payments\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|solutionrelative:openpay.web\\pages\\payments\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|solutionrelative:openpay.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3C48D06-7B3A-0384-C07A-F9FC2295BA02}|OpenPay.Infrastructure\\OpenPay.Infrastructure.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.infrastructure\\services\\bankstatusbackgroundservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C3C48D06-7B3A-0384-C07A-F9FC2295BA02}|OpenPay.Infrastructure\\OpenPay.Infrastructure.csproj|solutionrelative:openpay.infrastructure\\services\\bankstatusbackgroundservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3C48D06-7B3A-0384-C07A-F9FC2295BA02}|OpenPay.Infrastructure\\OpenPay.Infrastructure.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.infrastructure\\services\\bankstatusprocessor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C3C48D06-7B3A-0384-C07A-F9FC2295BA02}|OpenPay.Infrastructure\\OpenPay.Infrastructure.csproj|solutionrelative:openpay.infrastructure\\services\\bankstatusprocessor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58773FD8-88DA-86CA-A9B8-AEA1F6205869}|OpenPay.Application\\OpenPay.Application.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.application\\interfaces\\ibankstatusprocessor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58773FD8-88DA-86CA-A9B8-AEA1F6205869}|OpenPay.Application\\OpenPay.Application.csproj|solutionrelative:openpay.application\\interfaces\\ibankstatusprocessor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3C48D06-7B3A-0384-C07A-F9FC2295BA02}|OpenPay.Infrastructure\\OpenPay.Infrastructure.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.infrastructure\\services\\calendarservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C3C48D06-7B3A-0384-C07A-F9FC2295BA02}|OpenPay.Infrastructure\\OpenPay.Infrastructure.csproj|solutionrelative:openpay.infrastructure\\services\\calendarservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.web\\pages\\payments\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|solutionrelative:openpay.web\\pages\\payments\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.web\\pages\\payments\\create.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|solutionrelative:openpay.web\\pages\\payments\\create.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3C48D06-7B3A-0384-C07A-F9FC2295BA02}|OpenPay.Infrastructure\\OpenPay.Infrastructure.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.infrastructure\\services\\paymentorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C3C48D06-7B3A-0384-C07A-F9FC2295BA02}|OpenPay.Infrastructure\\OpenPay.Infrastructure.csproj|solutionrelative:openpay.infrastructure\\services\\paymentorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58773FD8-88DA-86CA-A9B8-AEA1F6205869}|OpenPay.Application\\OpenPay.Application.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.application\\dtos\\payments\\upsertpaymentorderdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58773FD8-88DA-86CA-A9B8-AEA1F6205869}|OpenPay.Application\\OpenPay.Application.csproj|solutionrelative:openpay.application\\dtos\\payments\\upsertpaymentorderdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.web\\pages\\calendar\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|solutionrelative:openpay.web\\pages\\calendar\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.web\\pages\\calendar\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|solutionrelative:openpay.web\\pages\\calendar\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.web\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|solutionrelative:openpay.web\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58773FD8-88DA-86CA-A9B8-AEA1F6205869}|OpenPay.Application\\OpenPay.Application.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.application\\interfaces\\icalendarservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58773FD8-88DA-86CA-A9B8-AEA1F6205869}|OpenPay.Application\\OpenPay.Application.csproj|solutionrelative:openpay.application\\interfaces\\icalendarservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58773FD8-88DA-86CA-A9B8-AEA1F6205869}|OpenPay.Application\\OpenPay.Application.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.application\\dtos\\calendar\\calendardaydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58773FD8-88DA-86CA-A9B8-AEA1F6205869}|OpenPay.Application\\OpenPay.Application.csproj|solutionrelative:openpay.application\\dtos\\calendar\\calendardaydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58773FD8-88DA-86CA-A9B8-AEA1F6205869}|OpenPay.Application\\OpenPay.Application.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.application\\dtos\\calendar\\calendarpaymentitemdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58773FD8-88DA-86CA-A9B8-AEA1F6205869}|OpenPay.Application\\OpenPay.Application.csproj|solutionrelative:openpay.application\\dtos\\calendar\\calendarpaymentitemdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.web\\pages\\reports\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|solutionrelative:openpay.web\\pages\\reports\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3C48D06-7B3A-0384-C07A-F9FC2295BA02}|OpenPay.Infrastructure\\OpenPay.Infrastructure.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.infrastructure\\services\\reportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C3C48D06-7B3A-0384-C07A-F9FC2295BA02}|OpenPay.Infrastructure\\OpenPay.Infrastructure.csproj|solutionrelative:openpay.infrastructure\\services\\reportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.web\\pages\\reports\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED95E341-2775-346E-9EAD-2DCB314E3971}|OpenPay.Web\\OpenPay.Web.csproj|solutionrelative:openpay.web\\pages\\reports\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58773FD8-88DA-86CA-A9B8-AEA1F6205869}|OpenPay.Application\\OpenPay.Application.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.application\\interfaces\\ireportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58773FD8-88DA-86CA-A9B8-AEA1F6205869}|OpenPay.Application\\OpenPay.Application.csproj|solutionrelative:openpay.application\\interfaces\\ireportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58773FD8-88DA-86CA-A9B8-AEA1F6205869}|OpenPay.Application\\OpenPay.Application.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.application\\dtos\\reports\\reportoverviewdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58773FD8-88DA-86CA-A9B8-AEA1F6205869}|OpenPay.Application\\OpenPay.Application.csproj|solutionrelative:openpay.application\\dtos\\reports\\reportoverviewdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58773FD8-88DA-86CA-A9B8-AEA1F6205869}|OpenPay.Application\\OpenPay.Application.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.application\\dtos\\reports\\statussummarydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58773FD8-88DA-86CA-A9B8-AEA1F6205869}|OpenPay.Application\\OpenPay.Application.csproj|solutionrelative:openpay.application\\dtos\\reports\\statussummarydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58773FD8-88DA-86CA-A9B8-AEA1F6205869}|OpenPay.Application\\OpenPay.Application.csproj|c:\\users\\kirill.omakaev\\source\\repos\\openpay\\openpay.application\\dtos\\reports\\paymentreportitemdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58773FD8-88DA-86CA-A9B8-AEA1F6205869}|OpenPay.Application\\OpenPay.Application.csproj|solutionrelative:openpay.application\\dtos\\reports\\paymentreportitemdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Pages\\Payments\\Index.cshtml.cs",
+              "RelativeDocumentMoniker": "OpenPay.Web\\Pages\\Payments\\Index.cshtml.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Pages\\Payments\\Index.cshtml.cs",
+              "RelativeToolTip": "OpenPay.Web\\Pages\\Payments\\Index.cshtml.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAswEMAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T17:18:43.218Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Pages\\Payments\\Index.cshtml",
+              "RelativeDocumentMoniker": "OpenPay.Web\\Pages\\Payments\\Index.cshtml",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Pages\\Payments\\Index.cshtml",
+              "RelativeToolTip": "OpenPay.Web\\Pages\\Payments\\Index.cshtml",
+              "ViewState": "AgIAAFoAAAAAAAAAAAAAAGUAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-12T17:17:58.428Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "BankStatusBackgroundService.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Infrastructure\\Services\\BankStatusBackgroundService.cs",
+              "RelativeDocumentMoniker": "OpenPay.Infrastructure\\Services\\BankStatusBackgroundService.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Infrastructure\\Services\\BankStatusBackgroundService.cs",
+              "RelativeToolTip": "OpenPay.Infrastructure\\Services\\BankStatusBackgroundService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T17:08:17.079Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "BankStatusProcessor.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Infrastructure\\Services\\BankStatusProcessor.cs",
+              "RelativeDocumentMoniker": "OpenPay.Infrastructure\\Services\\BankStatusProcessor.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Infrastructure\\Services\\BankStatusProcessor.cs",
+              "RelativeToolTip": "OpenPay.Infrastructure\\Services\\BankStatusProcessor.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T17:05:44.352Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "IBankStatusProcessor.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Application\\Interfaces\\IBankStatusProcessor.cs",
+              "RelativeDocumentMoniker": "OpenPay.Application\\Interfaces\\IBankStatusProcessor.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Application\\Interfaces\\IBankStatusProcessor.cs",
+              "RelativeToolTip": "OpenPay.Application\\Interfaces\\IBankStatusProcessor.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T17:05:05.408Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Program.cs",
+              "RelativeDocumentMoniker": "OpenPay.Web\\Program.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Program.cs",
+              "RelativeToolTip": "OpenPay.Web\\Program.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAACkAAABBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T13:33:48.942Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Create.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Pages\\Payments\\Create.cshtml.cs",
+              "RelativeDocumentMoniker": "OpenPay.Web\\Pages\\Payments\\Create.cshtml.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Pages\\Payments\\Create.cshtml.cs",
+              "RelativeToolTip": "OpenPay.Web\\Pages\\Payments\\Create.cshtml.cs",
+              "ViewState": "AgIAADUAAAAAAAAAAAAuwFYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T16:23:32.369Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Pages\\Payments\\Create.cshtml",
+              "RelativeDocumentMoniker": "OpenPay.Web\\Pages\\Payments\\Create.cshtml",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Pages\\Payments\\Create.cshtml",
+              "RelativeToolTip": "OpenPay.Web\\Pages\\Payments\\Create.cshtml",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAAAEMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-12T16:23:29.264Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "PaymentOrderService.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Infrastructure\\Services\\PaymentOrderService.cs",
+              "RelativeDocumentMoniker": "OpenPay.Infrastructure\\Services\\PaymentOrderService.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Infrastructure\\Services\\PaymentOrderService.cs",
+              "RelativeToolTip": "OpenPay.Infrastructure\\Services\\PaymentOrderService.cs",
+              "ViewState": "AgIAAH4AAAAAAAAAAAAowI0AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T16:22:24.517Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "UpsertPaymentOrderDto.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Application\\DTOs\\Payments\\UpsertPaymentOrderDto.cs",
+              "RelativeDocumentMoniker": "OpenPay.Application\\DTOs\\Payments\\UpsertPaymentOrderDto.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Application\\DTOs\\Payments\\UpsertPaymentOrderDto.cs",
+              "RelativeToolTip": "OpenPay.Application\\DTOs\\Payments\\UpsertPaymentOrderDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T16:21:29.118Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CalendarService.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Infrastructure\\Services\\CalendarService.cs",
+              "RelativeDocumentMoniker": "OpenPay.Infrastructure\\Services\\CalendarService.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Infrastructure\\Services\\CalendarService.cs",
+              "RelativeToolTip": "OpenPay.Infrastructure\\Services\\CalendarService.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAAwDYAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T14:31:25.246Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Index.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Pages\\Calendar\\Index.cshtml.cs",
+              "RelativeDocumentMoniker": "OpenPay.Web\\Pages\\Calendar\\Index.cshtml.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Pages\\Calendar\\Index.cshtml.cs",
+              "RelativeToolTip": "OpenPay.Web\\Pages\\Calendar\\Index.cshtml.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAA1wCIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T14:32:26.938Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Pages\\Calendar\\Index.cshtml",
+              "RelativeDocumentMoniker": "OpenPay.Web\\Pages\\Calendar\\Index.cshtml",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Pages\\Calendar\\Index.cshtml",
+              "RelativeToolTip": "OpenPay.Web\\Pages\\Calendar\\Index.cshtml",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAYwBwAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-12T14:32:20.019Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "ICalendarService.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Application\\Interfaces\\ICalendarService.cs",
+              "RelativeDocumentMoniker": "OpenPay.Application\\Interfaces\\ICalendarService.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Application\\Interfaces\\ICalendarService.cs",
+              "RelativeToolTip": "OpenPay.Application\\Interfaces\\ICalendarService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T14:30:53.065Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Pages\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "OpenPay.Web\\Pages\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Pages\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "OpenPay.Web\\Pages\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAG4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-12T13:34:45.994Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "CalendarDayDto.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Application\\DTOs\\Calendar\\CalendarDayDto.cs",
+              "RelativeDocumentMoniker": "OpenPay.Application\\DTOs\\Calendar\\CalendarDayDto.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Application\\DTOs\\Calendar\\CalendarDayDto.cs",
+              "RelativeToolTip": "OpenPay.Application\\DTOs\\Calendar\\CalendarDayDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T14:30:04.431Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "CalendarPaymentItemDto.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Application\\DTOs\\Calendar\\CalendarPaymentItemDto.cs",
+              "RelativeDocumentMoniker": "OpenPay.Application\\DTOs\\Calendar\\CalendarPaymentItemDto.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Application\\DTOs\\Calendar\\CalendarPaymentItemDto.cs",
+              "RelativeToolTip": "OpenPay.Application\\DTOs\\Calendar\\CalendarPaymentItemDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T14:29:39.415Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "Index.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Pages\\Reports\\Index.cshtml.cs",
+              "RelativeDocumentMoniker": "OpenPay.Web\\Pages\\Reports\\Index.cshtml.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Pages\\Reports\\Index.cshtml.cs",
+              "RelativeToolTip": "OpenPay.Web\\Pages\\Reports\\Index.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T13:34:18.169Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Pages\\Reports\\Index.cshtml",
+              "RelativeDocumentMoniker": "OpenPay.Web\\Pages\\Reports\\Index.cshtml",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\Pages\\Reports\\Index.cshtml",
+              "RelativeToolTip": "OpenPay.Web\\Pages\\Reports\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAABKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-12T13:34:15.154Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "ReportService.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Infrastructure\\Services\\ReportService.cs",
+              "RelativeDocumentMoniker": "OpenPay.Infrastructure\\Services\\ReportService.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Infrastructure\\Services\\ReportService.cs",
+              "RelativeToolTip": "OpenPay.Infrastructure\\Services\\ReportService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFcAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T13:32:50.464Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "IReportService.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Application\\Interfaces\\IReportService.cs",
+              "RelativeDocumentMoniker": "OpenPay.Application\\Interfaces\\IReportService.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Application\\Interfaces\\IReportService.cs",
+              "RelativeToolTip": "OpenPay.Application\\Interfaces\\IReportService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T13:32:24.062Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "StatusSummaryDto.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Application\\DTOs\\Reports\\StatusSummaryDto.cs",
+              "RelativeDocumentMoniker": "OpenPay.Application\\DTOs\\Reports\\StatusSummaryDto.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Application\\DTOs\\Reports\\StatusSummaryDto.cs",
+              "RelativeToolTip": "OpenPay.Application\\DTOs\\Reports\\StatusSummaryDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T13:30:38.05Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "ReportOverviewDto.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Application\\DTOs\\Reports\\ReportOverviewDto.cs",
+              "RelativeDocumentMoniker": "OpenPay.Application\\DTOs\\Reports\\ReportOverviewDto.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Application\\DTOs\\Reports\\ReportOverviewDto.cs",
+              "RelativeToolTip": "OpenPay.Application\\DTOs\\Reports\\ReportOverviewDto.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAA9wBUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T12:57:27.039Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "PaymentReportItemDto.cs",
+              "DocumentMoniker": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Application\\DTOs\\Reports\\PaymentReportItemDto.cs",
+              "RelativeDocumentMoniker": "OpenPay.Application\\DTOs\\Reports\\PaymentReportItemDto.cs",
+              "ToolTip": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Application\\DTOs\\Reports\\PaymentReportItemDto.cs",
+              "RelativeToolTip": "OpenPay.Application\\DTOs\\Reports\\PaymentReportItemDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T12:55:54.892Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

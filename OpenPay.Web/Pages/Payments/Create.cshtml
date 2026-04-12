@@ -1,0 +1,68 @@
+﻿@page
+@model OpenPay.Web.Pages.Payments.CreateModel
+@{
+    ViewData["Title"] = "Создание платежного поручения";
+}
+
+<h2 class="mb-3">Создание платежного поручения</h2>
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+<form method="post">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label asp-for="Item.DocumentNumber" class="form-label"></label>
+            <input asp-for="Item.DocumentNumber" class="form-control" placeholder="Можно оставить пустым для автогенерации" />
+            <span asp-validation-for="Item.DocumentNumber" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="Item.PaymentDate" class="form-label"></label>
+            <input asp-for="Item.PaymentDate" type="date" class="form-control" />
+            <span asp-validation-for="Item.PaymentDate" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="Item.Currency" class="form-label"></label>
+            <input asp-for="Item.Currency" class="form-control" />
+            <span asp-validation-for="Item.Currency" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Item.CounterpartyId" class="form-label"></label>
+            <select asp-for="Item.CounterpartyId" asp-items="Model.CounterpartyOptions" class="form-select">
+                <option value="">-- выберите контрагента --</option>
+            </select>
+            <span asp-validation-for="Item.CounterpartyId" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Item.OrganizationBankAccountId" class="form-label"></label>
+            <select asp-for="Item.OrganizationBankAccountId" asp-items="Model.AccountOptions" class="form-select">
+                <option value="">-- выберите счет организации --</option>
+            </select>
+            <span asp-validation-for="Item.OrganizationBankAccountId" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="Item.Amount" class="form-label"></label>
+            <input asp-for="Item.Amount" class="form-control" />
+            <span asp-validation-for="Item.Amount" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-8">
+            <label asp-for="Item.Purpose" class="form-label"></label>
+            <input asp-for="Item.Purpose" class="form-control" />
+            <span asp-validation-for="Item.Purpose" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary">Сохранить как черновик</button>
+        <a asp-page="Index" class="btn btn-secondary">Отмена</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

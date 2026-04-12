@@ -1,0 +1,65 @@
+﻿@page
+@model OpenPay.Web.Pages.Calendar.IndexModel
+@{
+    ViewData["Title"] = "Платежный календарь";
+}
+
+<h2 class="mb-3">Платежный календарь</h2>
+
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-3">
+        <label asp-for="DateFrom" class="form-label">Дата с</label>
+        <input asp-for="DateFrom" type="date" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <label asp-for="DateTo" class="form-label">Дата по</label>
+        <input asp-for="DateTo" type="date" class="form-control" />
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary">Показать</button>
+    </div>
+</form>
+
+@if (Model.Days.Count == 0)
+{
+    <div class="text-muted">Нет запланированных платежей за выбранный период.</div>
+}
+else
+{
+    @foreach (var day in Model.Days)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                <strong>@day.Date.ToString("dd.MM.yyyy")</strong>
+            </div>
+
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead>
+                        <tr>
+                            <th>Номер</th>
+                            <th>Контрагент</th>
+                            <th>Сумма</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in day.Payments)
+                        {
+                            <tr>
+                                <td>
+                                    <a asp-page="/Payments/Edit" asp-route-id="@p.Id">
+                                        @p.DocumentNumber
+                                    </a>
+                                </td>
+                                <td>@p.CounterpartyName</td>
+                                <td>@p.Amount.ToString("N2") @p.Currency</td>
+                                <td>@p.Status</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}

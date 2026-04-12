@@ -1,0 +1,185 @@
+﻿@page "{id:guid}"
+@model OpenPay.Web.Pages.Payments.EditModel
+@{
+    ViewData["Title"] = "Карточка платежного поручения";
+}
+
+<h2 class="mb-3">Карточка платежного поручения</h2>
+
+<div class="mb-3">
+    @if (Model.Item.CurrentStatus == OpenPay.Domain.Enums.PaymentStatus.Draft)
+    {
+        <span class="badge bg-secondary">Draft</span>
+    }
+    else if (Model.Item.CurrentStatus == OpenPay.Domain.Enums.PaymentStatus.PendingApproval)
+    {
+        <span class="badge bg-warning text-dark">PendingApproval</span>
+    }
+    else if (Model.Item.CurrentStatus == OpenPay.Domain.Enums.PaymentStatus.Approved)
+    {
+        <span class="badge bg-success">Approved</span>
+    }
+    else if (Model.Item.CurrentStatus == OpenPay.Domain.Enums.PaymentStatus.Rejected)
+    {
+        <span class="badge bg-danger">Rejected</span>
+    }
+    else if (Model.Item.CurrentStatus == OpenPay.Domain.Enums.PaymentStatus.Rework)
+    {
+        <span class="badge bg-info text-dark">Rework</span>
+    }
+    else if (Model.Item.CurrentStatus == OpenPay.Domain.Enums.PaymentStatus.Sent)
+    {
+        <span class="badge bg-primary">Sent</span>
+    }
+    else if (Model.Item.CurrentStatus == OpenPay.Domain.Enums.PaymentStatus.Executed)
+    {
+        <span class="badge bg-success">Executed</span>
+    }
+    else if (Model.Item.CurrentStatus == OpenPay.Domain.Enums.PaymentStatus.Error)
+    {
+        <span class="badge bg-danger">Error</span>
+    }
+    else
+    {
+        <span class="badge bg-secondary">@Model.Item.CurrentStatus</span>
+    }
+</div>
+
+@if (!Model.Item.CanEdit)
+{
+    <div class="alert alert-secondary">
+        Документ доступен только для просмотра. Редактирование разрешено только для статусов Draft и Rework.
+    </div>
+}
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+<form method="post">
+    <input asp-for="Item.Id" type="hidden" />
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label asp-for="Item.DocumentNumber" class="form-label"></label>
+            <input asp-for="Item.DocumentNumber" class="form-control" readonly="@(Model.Item.CanEdit ? null : "readonly")" />
+            <span asp-validation-for="Item.DocumentNumber" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="Item.PaymentDate" class="form-label"></label>
+            <input asp-for="Item.PaymentDate" type="date" class="form-control" readonly="@(Model.Item.CanEdit ? null : "readonly")" />
+            <span asp-validation-for="Item.PaymentDate" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="Item.Currency" class="form-label"></label>
+            <input asp-for="Item.Currency" class="form-control" readonly="@(Model.Item.CanEdit ? null : "readonly")" />
+            <span asp-validation-for="Item.Currency" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Item.CounterpartyId" class="form-label"></label>
+            <select asp-for="Item.CounterpartyId" asp-items="Model.CounterpartyOptions" class="form-select" disabled="@(!Model.Item.CanEdit)">
+                <option value="">-- выберите контрагента --</option>
+            </select>
+            <span asp-validation-for="Item.CounterpartyId" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Item.OrganizationBankAccountId" class="form-label"></label>
+            <select asp-for="Item.OrganizationBankAccountId" asp-items="Model.AccountOptions" class="form-select" disabled="@(!Model.Item.CanEdit)">
+                <option value="">-- выберите счет организации --</option>
+            </select>
+            <span asp-validation-for="Item.OrganizationBankAccountId" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="Item.Amount" class="form-label"></label>
+            <input asp-for="Item.Amount" class="form-control" readonly="@(Model.Item.CanEdit ? null : "readonly")" />
+            <span asp-validation-for="Item.Amount" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-8">
+            <label asp-for="Item.Purpose" class="form-label"></label>
+            <input asp-for="Item.Purpose" class="form-control" readonly="@(Model.Item.CanEdit ? null : "readonly")" />
+            <span asp-validation-for="Item.Purpose" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        @if (Model.Item.CanEdit)
+        {
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        }
+        <a asp-page="Index" class="btn btn-secondary">Назад</a>
+    </div>
+</form>
+@if (!string.IsNullOrWhiteSpace(Model.Item.BankReferenceId) ||
+    !string.IsNullOrWhiteSpace(Model.Item.BankResponseMessage) ||
+    Model.Item.SentAt.HasValue ||
+    Model.Item.ProcessedAt.HasValue)
+{
+    <div class="card mt-4">
+        <div class="card-header">
+            Банковская обработка
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <strong>Reference банка:</strong><br />
+                    @(string.IsNullOrWhiteSpace(Model.Item.BankReferenceId) ? "-" : Model.Item.BankReferenceId)
+                </div>
+                <div class="col-md-3">
+                    <strong>Отправлено:</strong><br />
+                    @(Model.Item.SentAt?.ToLocalTime().ToString("dd.MM.yyyy HH:mm") ?? "-")
+                </div>
+                <div class="col-md-3">
+                    <strong>Обработано:</strong><br />
+                    @(Model.Item.ProcessedAt?.ToLocalTime().ToString("dd.MM.yyyy HH:mm") ?? "-")
+                </div>
+                <div class="col-md-12">
+                    <strong>Ответ банка:</strong><br />
+                    @(string.IsNullOrWhiteSpace(Model.Item.BankResponseMessage) ? "-" : Model.Item.BankResponseMessage)
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="card mt-4">
+    <div class="card-header">
+        История согласования
+    </div>
+    <div class="card-body">
+        @if (Model.ApprovalHistory.Count == 0)
+        {
+            <div class="text-muted">Решения по согласованию пока отсутствуют.</div>
+        }
+        else
+        {
+            <table class="table table-sm table-bordered mb-0">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Согласующий</th>
+                        <th>Решение</th>
+                        <th>Комментарий</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ApprovalHistory)
+                    {
+                        <tr>
+                            <td>@item.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                            <td>@item.ApproverName</td>
+                            <td>@item.Decision</td>
+                            <td>@(string.IsNullOrWhiteSpace(item.Comment) ? "-" : item.Comment)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

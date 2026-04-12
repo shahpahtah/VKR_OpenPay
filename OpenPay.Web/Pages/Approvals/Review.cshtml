@@ -1,0 +1,83 @@
+﻿@page "{id:guid}"
+@model OpenPay.Web.Pages.Approvals.ReviewModel
+@{
+    ViewData["Title"] = "Рассмотрение платежа";
+}
+
+@if (Model.Item == null)
+{
+    <div class="alert alert-danger">Платеж не найден.</div>
+}
+else
+{
+    <h2 class="mb-3">Рассмотрение платежа</h2>
+
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <strong>Номер:</strong><br />
+                    @Model.Item.DocumentNumber
+                </div>
+                <div class="col-md-4">
+                    <strong>Дата создания:</strong><br />
+                    @Model.Item.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+                </div>
+                <div class="col-md-4">
+                    <strong>Дата платежа:</strong><br />
+                    @(Model.Item.PaymentDate?.ToString("dd.MM.yyyy") ?? "-")
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Контрагент:</strong><br />
+                    @Model.Item.CounterpartyName
+                </div>
+                <div class="col-md-6">
+                    <strong>ИНН:</strong><br />
+                    @Model.Item.CounterpartyInn
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Счет организации:</strong><br />
+                    @Model.Item.OrganizationAccountDisplay
+                </div>
+                <div class="col-md-3">
+                    <strong>Сумма:</strong><br />
+                    @Model.Item.Amount.ToString("N2") @Model.Item.Currency
+                </div>
+                <div class="col-md-3">
+                    <strong>Статус:</strong><br />
+                    @Model.Item.Status
+                </div>
+
+                <div class="col-md-12">
+                    <strong>Назначение платежа:</strong><br />
+                    @Model.Item.Purpose
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="post">
+        <input asp-for="ActionModel.PaymentOrderId" type="hidden" />
+
+        <div class="mb-3">
+            <label asp-for="ActionModel.Comment" class="form-label"></label>
+            <textarea asp-for="ActionModel.Comment" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="ActionModel.Comment" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" asp-page-handler="Approve" class="btn btn-success">Утвердить</button>
+            <button type="submit" asp-page-handler="Reject" class="btn btn-danger">Отклонить</button>
+            <button type="submit" asp-page-handler="Rework" class="btn btn-warning">На доработку</button>
+            <a asp-page="Index" class="btn btn-secondary">Назад</a>
+        </div>
+    </form>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

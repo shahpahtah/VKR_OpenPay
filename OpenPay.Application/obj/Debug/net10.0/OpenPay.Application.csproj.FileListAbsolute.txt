@@ -1,0 +1,15 @@
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\bin\Debug\net10.0\OpenPay.Application.deps.json
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\bin\Debug\net10.0\OpenPay.Application.dll
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\bin\Debug\net10.0\OpenPay.Application.pdb
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\bin\Debug\net10.0\OpenPay.Domain.dll
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\bin\Debug\net10.0\OpenPay.Domain.pdb
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\obj\Debug\net10.0\OpenPay.Application.csproj.AssemblyReference.cache
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\obj\Debug\net10.0\OpenPay.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\obj\Debug\net10.0\OpenPay.Application.AssemblyInfoInputs.cache
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\obj\Debug\net10.0\OpenPay.Application.AssemblyInfo.cs
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\obj\Debug\net10.0\OpenPay.Application.csproj.CoreCompileInputs.cache
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\obj\Debug\net10.0\OpenPay..FBFA48E0.Up2Date
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\obj\Debug\net10.0\OpenPay.Application.dll
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\obj\Debug\net10.0\refint\OpenPay.Application.dll
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\obj\Debug\net10.0\OpenPay.Application.pdb
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\obj\Debug\net10.0\ref\OpenPay.Application.dll

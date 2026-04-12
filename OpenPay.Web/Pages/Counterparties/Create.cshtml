@@ -1,0 +1,65 @@
+﻿@page
+@model OpenPay.Web.Pages.Counterparties.CreateModel
+@{
+    ViewData["Title"] = "Создание контрагента";
+}
+
+<h2 class="mb-3">Создание контрагента</h2>
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+<form method="post">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label asp-for="Item.Inn" class="form-label"></label>
+            <input asp-for="Item.Inn" class="form-control" />
+            <span asp-validation-for="Item.Inn" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="Item.Kpp" class="form-label"></label>
+            <input asp-for="Item.Kpp" class="form-control" />
+            <span asp-validation-for="Item.Kpp" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-12">
+            <label asp-for="Item.FullName" class="form-label"></label>
+            <input asp-for="Item.FullName" class="form-control" />
+            <span asp-validation-for="Item.FullName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="Item.Bic" class="form-label"></label>
+            <input asp-for="Item.Bic" class="form-control" />
+            <span asp-validation-for="Item.Bic" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="Item.AccountNumber" class="form-label"></label>
+            <input asp-for="Item.AccountNumber" class="form-control" />
+            <span asp-validation-for="Item.AccountNumber" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="Item.CorrespondentAccount" class="form-label"></label>
+            <input asp-for="Item.CorrespondentAccount" class="form-control" />
+            <span asp-validation-for="Item.CorrespondentAccount" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-12">
+            <div class="form-check">
+                <input asp-for="Item.IsActive" class="form-check-input" />
+                <label asp-for="Item.IsActive" class="form-check-label"></label>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a asp-page="Index" class="btn btn-secondary">Отмена</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

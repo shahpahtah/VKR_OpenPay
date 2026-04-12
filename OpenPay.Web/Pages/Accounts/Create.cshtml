@@ -1,0 +1,59 @@
+﻿@page
+@model OpenPay.Web.Pages.Accounts.CreateModel
+@{
+    ViewData["Title"] = "Создание счета";
+}
+
+<h2 class="mb-3">Создание банковского счета</h2>
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+<form method="post">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label asp-for="Item.Bic" class="form-label"></label>
+            <input asp-for="Item.Bic" class="form-control" />
+            <span asp-validation-for="Item.Bic" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="Item.AccountNumber" class="form-label"></label>
+            <input asp-for="Item.AccountNumber" class="form-control" />
+            <span asp-validation-for="Item.AccountNumber" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="Item.Currency" class="form-label"></label>
+            <input asp-for="Item.Currency" class="form-control" />
+            <span asp-validation-for="Item.Currency" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-8">
+            <label asp-for="Item.BankName" class="form-label"></label>
+            <input asp-for="Item.BankName" class="form-control" />
+            <span asp-validation-for="Item.BankName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="Item.ResponsibleUnit" class="form-label"></label>
+            <input asp-for="Item.ResponsibleUnit" class="form-control" />
+            <span asp-validation-for="Item.ResponsibleUnit" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-12">
+            <div class="form-check">
+                <input asp-for="Item.IsActive" class="form-check-input" />
+                <label asp-for="Item.IsActive" class="form-check-label"></label>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a asp-page="Index" class="btn btn-secondary">Отмена</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
