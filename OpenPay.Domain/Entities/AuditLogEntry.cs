@@ -13,4 +13,6 @@ public class AuditLogEntry : BaseEntity
 
     public string Description { get; set; } = string.Empty;
     public string? IpAddress { get; set; }
+    public Guid? OrganizationId { get; set; }
+    public Organization? Organization { get; set; }
 }

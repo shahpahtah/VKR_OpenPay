@@ -10,10 +10,14 @@ namespace OpenPay.Infrastructure.Services;
 public class AuditLogService : IAuditLogService
 {
     private readonly OpenPayDbContext _dbContext;
+    private readonly ICurrentOrganizationService _currentOrganizationService;
 
-    public AuditLogService(OpenPayDbContext dbContext)
+    public AuditLogService(
+        OpenPayDbContext dbContext,
+        ICurrentOrganizationService currentOrganizationService)
     {
         _dbContext = dbContext;
+        _currentOrganizationService = currentOrganizationService;
     }
 
     public async Task LogAsync(
@@ -24,6 +28,8 @@ public class AuditLogService : IAuditLogService
         string? objectType = null,
         string? ipAddress = null)
     {
+        var organizationId = await _currentOrganizationService.GetCurrentOrganizationIdAsync();
+
         var entry = new AuditLogEntry
         {
             EventType = eventType,
@@ -32,7 +38,8 @@ public class AuditLogService : IAuditLogService
             ObjectId = objectId,
             ObjectType = objectType,
             IpAddress = ipAddress,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            OrganizationId = organizationId
         };
 
         _dbContext.AuditLogEntries.Add(entry);
@@ -41,11 +48,14 @@ public class AuditLogService : IAuditLogService
 
     public async Task<IReadOnlyList<AuditLogListItemDto>> GetRecentAsync(int take = 100)
     {
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
         var result = await
             (from log in _dbContext.AuditLogEntries.AsNoTracking()
              join user in _dbContext.Users.AsNoTracking()
-                 on log.UserId equals user.Id into users
+                on log.UserId equals user.Id into users
              from user in users.DefaultIfEmpty()
+             where log.OrganizationId == organizationId
              orderby log.CreatedAt descending
              select new AuditLogListItemDto
              {

@@ -1,0 +1,69 @@
+﻿@page
+@model OpenPay.Web.Pages.Admin.Organizations.CreateModel
+@{
+    ViewData["Title"] = "Создание организации";
+}
+
+<h2 class="mb-3">Создание организации</h2>
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+<form method="post">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label asp-for="Item.Name" class="form-label"></label>
+            <input asp-for="Item.Name" class="form-control" />
+            <span asp-validation-for="Item.Name" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-3">
+            <label asp-for="Item.Inn" class="form-label"></label>
+            <input asp-for="Item.Inn" class="form-control" />
+            <span asp-validation-for="Item.Inn" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-3">
+            <label asp-for="Item.Kpp" class="form-label"></label>
+            <input asp-for="Item.Kpp" class="form-control" />
+            <span asp-validation-for="Item.Kpp" class="text-danger"></span>
+        </div>
+
+        <div class="col-12">
+            <hr />
+            <h5>Первый администратор организации</h5>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Item.AdminFullName" class="form-label"></label>
+            <input asp-for="Item.AdminFullName" class="form-control" />
+            <span asp-validation-for="Item.AdminFullName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Item.AdminEmail" class="form-label"></label>
+            <input asp-for="Item.AdminEmail" class="form-control" />
+            <span asp-validation-for="Item.AdminEmail" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Item.AdminPassword" class="form-label"></label>
+            <input asp-for="Item.AdminPassword" class="form-control" />
+            <span asp-validation-for="Item.AdminPassword" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Item.ConfirmAdminPassword" class="form-label"></label>
+            <input asp-for="Item.ConfirmAdminPassword" class="form-control" />
+            <span asp-validation-for="Item.ConfirmAdminPassword" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary">Создать</button>
+        <a asp-page="Index" class="btn btn-secondary">Назад</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

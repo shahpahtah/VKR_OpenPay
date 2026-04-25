@@ -9,29 +9,36 @@ namespace OpenPay.Infrastructure.Services;
 public class ReportService : IReportService
 {
     private readonly OpenPayDbContext _dbContext;
+    private readonly ICurrentOrganizationService _currentOrganizationService;
 
-    public ReportService(OpenPayDbContext dbContext)
+    public ReportService(
+        OpenPayDbContext dbContext,
+        ICurrentOrganizationService currentOrganizationService)
     {
         _dbContext = dbContext;
+        _currentOrganizationService = currentOrganizationService;
     }
 
     public async Task<ReportOverviewDto> GetOverviewAsync(DateTime? dateFrom, DateTime? dateTo)
     {
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
         var query = _dbContext.PaymentOrders
             .AsNoTracking()
             .Include(x => x.Counterparty)
+            .Where(x => x.OrganizationId == organizationId)
             .AsQueryable();
 
         if (dateFrom.HasValue)
         {
             var from = dateFrom.Value.Date;
-            query = query.Where(x => x.PaymentDate.HasValue && x.PaymentDate.Value.Date >= from);
+            query = query.Where(x => x.PaymentDate.HasValue && x.PaymentDate.Value >= from);
         }
 
         if (dateTo.HasValue)
         {
-            var to = dateTo.Value.Date;
-            query = query.Where(x => x.PaymentDate.HasValue && x.PaymentDate.Value.Date <= to);
+            var toExclusive = dateTo.Value.Date.AddDays(1);
+            query = query.Where(x => x.PaymentDate.HasValue && x.PaymentDate.Value < toExclusive);
         }
 
         var items = await query

@@ -22,7 +22,7 @@ build_property.RootNamespace = OpenPay.Web
 build_property.ProjectDir = C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
-build_property.RazorLangVersion = 9.0
+build_property.RazorLangVersion = 10.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
 build_property.MSBuildProjectDirectory = C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web
@@ -48,6 +48,26 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/kirill.omakaev/source/repos/OpenPay/OpenPay.Web/Pages/Admin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kirill.omakaev/source/repos/OpenPay/OpenPay.Web/Pages/Admin/Organizations/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cT3JnYW5pemF0aW9uc1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kirill.omakaev/source/repos/OpenPay/OpenPay.Web/Pages/Admin/Organizations/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cT3JnYW5pemF0aW9uc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kirill.omakaev/source/repos/OpenPay/OpenPay.Web/Pages/Admin/Users/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cVXNlcnNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kirill.omakaev/source/repos/OpenPay/OpenPay.Web/Pages/Admin/Users/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cVXNlcnNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kirill.omakaev/source/repos/OpenPay/OpenPay.Web/Pages/Admin/Users/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cVXNlcnNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/kirill.omakaev/source/repos/OpenPay/OpenPay.Web/Pages/Approvals/Index.cshtml]

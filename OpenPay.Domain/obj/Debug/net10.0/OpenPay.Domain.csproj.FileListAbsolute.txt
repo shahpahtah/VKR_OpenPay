@@ -1,7 +1,6 @@
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Domain\bin\Debug\net10.0\OpenPay.Domain.deps.json
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Domain\bin\Debug\net10.0\OpenPay.Domain.dll
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Domain\bin\Debug\net10.0\OpenPay.Domain.pdb
-C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Domain\obj\Debug\net10.0\OpenPay.Domain.csproj.AssemblyReference.cache
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Domain\obj\Debug\net10.0\OpenPay.Domain.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Domain\obj\Debug\net10.0\OpenPay.Domain.AssemblyInfoInputs.cache
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Domain\obj\Debug\net10.0\OpenPay.Domain.AssemblyInfo.cs
@@ -10,3 +9,4 @@ C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Domain\obj\Debug\net10.0\Op
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Domain\obj\Debug\net10.0\refint\OpenPay.Domain.dll
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Domain\obj\Debug\net10.0\OpenPay.Domain.pdb
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Domain\obj\Debug\net10.0\ref\OpenPay.Domain.dll
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Domain\obj\Debug\net10.0\OpenPay.Domain.sourcelink.json

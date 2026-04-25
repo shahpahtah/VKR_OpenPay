@@ -20,6 +20,19 @@
         <button type="submit" class="btn btn-primary">Сформировать</button>
     </div>
 </form>
+<div class="mb-4 d-flex gap-2">
+    <form method="post" asp-page-handler="ExportCsv">
+        <input type="hidden" name="DateFrom" value="@(Model.DateFrom?.ToString("yyyy-MM-dd"))" />
+        <input type="hidden" name="DateTo" value="@(Model.DateTo?.ToString("yyyy-MM-dd"))" />
+        <button type="submit" class="btn btn-outline-secondary">Экспорт CSV</button>
+    </form>
+
+    <form method="post" asp-page-handler="ExportExcel">
+        <input type="hidden" name="DateFrom" value="@(Model.DateFrom?.ToString("yyyy-MM-dd"))" />
+        <input type="hidden" name="DateTo" value="@(Model.DateTo?.ToString("yyyy-MM-dd"))" />
+        <button type="submit" class="btn btn-outline-success">Экспорт Excel</button>
+    </form>
+</div>
 
 <div class="row g-3 mb-4">
     <div class="col-md-3">

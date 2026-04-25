@@ -9,16 +9,23 @@ namespace OpenPay.Infrastructure.Services;
 public class OrganizationBankAccountService : IOrganizationBankAccountService
 {
     private readonly OpenPayDbContext _dbContext;
+    private readonly ICurrentOrganizationService _currentOrganizationService;
 
-    public OrganizationBankAccountService(OpenPayDbContext dbContext)
+    public OrganizationBankAccountService(
+        OpenPayDbContext dbContext,
+        ICurrentOrganizationService currentOrganizationService)
     {
         _dbContext = dbContext;
+        _currentOrganizationService = currentOrganizationService;
     }
 
     public async Task<IReadOnlyList<OrganizationBankAccountListItemDto>> GetAllAsync(string? search = null, bool? isActive = null)
     {
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
         var query = _dbContext.OrganizationBankAccounts
             .AsNoTracking()
+            .Where(x => x.OrganizationId == organizationId)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(search))
@@ -55,9 +62,11 @@ public class OrganizationBankAccountService : IOrganizationBankAccountService
 
     public async Task<UpsertOrganizationBankAccountDto?> GetByIdAsync(Guid id)
     {
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
         return await _dbContext.OrganizationBankAccounts
             .AsNoTracking()
-            .Where(x => x.Id == id)
+            .Where(x => x.Id == id && x.OrganizationId == organizationId)
             .Select(x => new UpsertOrganizationBankAccountDto
             {
                 Id = x.Id,
@@ -73,10 +82,13 @@ public class OrganizationBankAccountService : IOrganizationBankAccountService
 
     public async Task<Guid> CreateAsync(UpsertOrganizationBankAccountDto dto)
     {
-        await ValidateUniquenessAsync(dto);
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
+        await ValidateUniquenessAsync(dto, organizationId);
 
         var entity = new OrganizationBankAccount
         {
+            OrganizationId = organizationId,
             Bic = dto.Bic.Trim(),
             AccountNumber = dto.AccountNumber.Trim(),
             BankName = dto.BankName.Trim(),
@@ -96,9 +108,13 @@ public class OrganizationBankAccountService : IOrganizationBankAccountService
         if (dto.Id == null || dto.Id == Guid.Empty)
             throw new InvalidOperationException("Идентификатор счета не указан.");
 
-        await ValidateUniquenessAsync(dto);
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
 
-        var entity = await _dbContext.OrganizationBankAccounts.FirstOrDefaultAsync(x => x.Id == dto.Id.Value);
+        await ValidateUniquenessAsync(dto, organizationId);
+
+        var entity = await _dbContext.OrganizationBankAccounts
+            .FirstOrDefaultAsync(x => x.Id == dto.Id.Value && x.OrganizationId == organizationId);
+
         if (entity == null)
             throw new InvalidOperationException("Банковский счет не найден.");
 
@@ -114,7 +130,11 @@ public class OrganizationBankAccountService : IOrganizationBankAccountService
 
     public async Task DeactivateAsync(Guid id)
     {
-        var entity = await _dbContext.OrganizationBankAccounts.FirstOrDefaultAsync(x => x.Id == id);
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
+        var entity = await _dbContext.OrganizationBankAccounts
+            .FirstOrDefaultAsync(x => x.Id == id && x.OrganizationId == organizationId);
+
         if (entity == null)
             return;
 
@@ -122,13 +142,14 @@ public class OrganizationBankAccountService : IOrganizationBankAccountService
         await _dbContext.SaveChangesAsync();
     }
 
-    private async Task ValidateUniquenessAsync(UpsertOrganizationBankAccountDto dto)
+    private async Task ValidateUniquenessAsync(UpsertOrganizationBankAccountDto dto, Guid organizationId)
     {
         var currentId = dto.Id ?? Guid.Empty;
         var bic = dto.Bic.Trim();
         var accountNumber = dto.AccountNumber.Trim();
 
         var exists = await _dbContext.OrganizationBankAccounts.AnyAsync(x =>
+            x.OrganizationId == organizationId &&
             x.Id != currentId &&
             x.Bic == bic &&
             x.AccountNumber == accountNumber);

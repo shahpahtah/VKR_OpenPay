@@ -64,6 +64,16 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-page="/Admin/Index">Аудит</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-page="/Admin/Users/Index">Пользователи</a>
+                                </li>
+                            }
+
+                            @if (User.IsInRole(nameof(UserRole.PlatformAdmin)))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-page="/Admin/Organizations/Index">Организации</a>
+                                </li>
                             }
                         }
                     </ul>

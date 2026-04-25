@@ -1,13 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "iQvMao6QDNU=",
+  "dgSpecHash": "lbtXcIyE3BQ=",
   "success": true,
   "projectFilePath": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\OpenPay.Web.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\kirill.omakaev\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\kirill.omakaev\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
-    "C:\\Users\\kirill.omakaev\\.nuget\\packages\\entityframework\\5.0.0\\entityframework.5.0.0.nupkg.sha512",
-    "C:\\Users\\kirill.omakaev\\.nuget\\packages\\entityframework.ru\\5.0.0\\entityframework.ru.5.0.0.nupkg.sha512",
+    "C:\\Users\\kirill.omakaev\\.nuget\\packages\\closedxml\\0.105.0\\closedxml.0.105.0.nupkg.sha512",
+    "C:\\Users\\kirill.omakaev\\.nuget\\packages\\closedxml.parser\\2.0.0\\closedxml.parser.2.0.0.nupkg.sha512",
+    "C:\\Users\\kirill.omakaev\\.nuget\\packages\\documentformat.openxml\\3.1.1\\documentformat.openxml.3.1.1.nupkg.sha512",
+    "C:\\Users\\kirill.omakaev\\.nuget\\packages\\documentformat.openxml.framework\\3.1.1\\documentformat.openxml.framework.3.1.1.nupkg.sha512",
+    "C:\\Users\\kirill.omakaev\\.nuget\\packages\\excelnumberformat\\1.1.0\\excelnumberformat.1.1.0.nupkg.sha512",
     "C:\\Users\\kirill.omakaev\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\kirill.omakaev\\.nuget\\packages\\microsoft.aspnetcore.diagnostics.entityframeworkcore\\10.0.5\\microsoft.aspnetcore.diagnostics.entityframeworkcore.10.0.5.nupkg.sha512",
     "C:\\Users\\kirill.omakaev\\.nuget\\packages\\microsoft.aspnetcore.identity.entityframeworkcore\\10.0.5\\microsoft.aspnetcore.identity.entityframeworkcore.10.0.5.nupkg.sha512",
@@ -47,6 +50,8 @@
     "C:\\Users\\kirill.omakaev\\.nuget\\packages\\microsoft.visualstudio.solutionpersistence\\1.0.52\\microsoft.visualstudio.solutionpersistence.1.0.52.nupkg.sha512",
     "C:\\Users\\kirill.omakaev\\.nuget\\packages\\mono.texttemplating\\3.0.0\\mono.texttemplating.3.0.0.nupkg.sha512",
     "C:\\Users\\kirill.omakaev\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\kirill.omakaev\\.nuget\\packages\\rbush.signed\\4.0.0\\rbush.signed.4.0.0.nupkg.sha512",
+    "C:\\Users\\kirill.omakaev\\.nuget\\packages\\sixlabors.fonts\\1.0.0\\sixlabors.fonts.1.0.0.nupkg.sha512",
     "C:\\Users\\kirill.omakaev\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.1.11\\sqlitepclraw.bundle_e_sqlite3.2.1.11.nupkg.sha512",
     "C:\\Users\\kirill.omakaev\\.nuget\\packages\\sqlitepclraw.core\\2.1.11\\sqlitepclraw.core.2.1.11.nupkg.sha512",
     "C:\\Users\\kirill.omakaev\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.1.11\\sqlitepclraw.lib.e_sqlite3.2.1.11.nupkg.sha512",
@@ -61,34 +66,10 @@
     "C:\\Users\\kirill.omakaev\\.nuget\\packages\\system.composition.typedparts\\9.0.0\\system.composition.typedparts.9.0.0.nupkg.sha512",
     "C:\\Users\\kirill.omakaev\\.nuget\\packages\\system.configuration.configurationmanager\\9.0.4\\system.configuration.configurationmanager.9.0.4.nupkg.sha512",
     "C:\\Users\\kirill.omakaev\\.nuget\\packages\\system.identitymodel.tokens.jwt\\7.7.1\\system.identitymodel.tokens.jwt.7.7.1.nupkg.sha512",
+    "C:\\Users\\kirill.omakaev\\.nuget\\packages\\system.io.packaging\\8.0.1\\system.io.packaging.8.0.1.nupkg.sha512",
     "C:\\Users\\kirill.omakaev\\.nuget\\packages\\system.memory.data\\8.0.1\\system.memory.data.8.0.1.nupkg.sha512",
     "C:\\Users\\kirill.omakaev\\.nuget\\packages\\system.security.cryptography.pkcs\\9.0.4\\system.security.cryptography.pkcs.9.0.4.nupkg.sha512",
     "C:\\Users\\kirill.omakaev\\.nuget\\packages\\system.security.cryptography.protecteddata\\9.0.4\\system.security.cryptography.protecteddata.9.0.4.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "message": "Пакет \"EntityFramework 5.0.0\" был восстановлен с помощью \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\", а не целевой платформы проекта \"net10.0\". Этот пакет может быть не полностью совместим с вашим проектом.",
-      "projectPath": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\OpenPay.Web.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\OpenPay.Web.csproj",
-      "libraryId": "EntityFramework",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "message": "Пакет \"EntityFramework.ru 5.0.0\" был восстановлен с помощью \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\", а не целевой платформы проекта \"net10.0\". Этот пакет может быть не полностью совместим с вашим проектом.",
-      "projectPath": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\OpenPay.Web.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\kirill.omakaev\\source\\repos\\OpenPay\\OpenPay.Web\\OpenPay.Web.csproj",
-      "libraryId": "EntityFramework.ru",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    }
-  ]
+  "logs": []
 }

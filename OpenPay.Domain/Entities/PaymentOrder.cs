@@ -33,4 +33,6 @@ public class PaymentOrder : BaseEntity
     public DateTime? SentAt { get; set; }
 
     public DateTime? ProcessedAt { get; set; }
+    public Guid OrganizationId { get; set; }
+    public Organization? Organization { get; set; }
 }

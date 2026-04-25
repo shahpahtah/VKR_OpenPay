@@ -11,20 +11,26 @@ public class BankProcessingService : IBankProcessingService
     private readonly OpenPayDbContext _dbContext;
     private readonly IBankGatewayService _bankGatewayService;
     private readonly IAuditLogService _auditLogService;
+    private readonly ICurrentOrganizationService _currentOrganizationService;
 
     public BankProcessingService(
         OpenPayDbContext dbContext,
         IBankGatewayService bankGatewayService,
-        IAuditLogService auditLogService)
+        IAuditLogService auditLogService,
+        ICurrentOrganizationService currentOrganizationService)
     {
         _dbContext = dbContext;
         _bankGatewayService = bankGatewayService;
         _auditLogService = auditLogService;
+        _currentOrganizationService = currentOrganizationService;
     }
 
     public async Task SendToBankAsync(Guid paymentOrderId, string userId)
     {
-        var payment = await _dbContext.PaymentOrders.FirstOrDefaultAsync(x => x.Id == paymentOrderId);
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
+        var payment = await _dbContext.PaymentOrders
+            .FirstOrDefaultAsync(x => x.Id == paymentOrderId && x.OrganizationId == organizationId);
 
         if (payment == null)
             throw new InvalidOperationException("Платежное поручение не найдено.");
@@ -54,7 +60,10 @@ public class BankProcessingService : IBankProcessingService
 
     public async Task CheckBankStatusAsync(Guid paymentOrderId, string userId)
     {
-        var payment = await _dbContext.PaymentOrders.FirstOrDefaultAsync(x => x.Id == paymentOrderId);
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
+        var payment = await _dbContext.PaymentOrders
+            .FirstOrDefaultAsync(x => x.Id == paymentOrderId && x.OrganizationId == organizationId);
 
         if (payment == null)
             throw new InvalidOperationException("Платежное поручение не найдено.");
@@ -71,8 +80,8 @@ public class BankProcessingService : IBankProcessingService
         await _dbContext.SaveChangesAsync();
 
         var auditEvent = result.FinalStatus == PaymentStatus.Executed
-     ? AuditEventType.PaymentExecutedByBank
-     : AuditEventType.PaymentBankError;
+            ? AuditEventType.PaymentExecutedByBank
+            : AuditEventType.PaymentBankError;
 
         var description = result.FinalStatus == PaymentStatus.Executed
             ? $"Платеж {payment.DocumentNumber} исполнен банком."

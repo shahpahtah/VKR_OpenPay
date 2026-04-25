@@ -9,15 +9,24 @@ namespace OpenPay.Infrastructure.Services;
 public class CounterpartyService : ICounterpartyService
 {
     private readonly OpenPayDbContext _dbContext;
+    private readonly ICurrentOrganizationService _currentOrganizationService;
 
-    public CounterpartyService(OpenPayDbContext dbContext)
+    public CounterpartyService(
+        OpenPayDbContext dbContext,
+        ICurrentOrganizationService currentOrganizationService)
     {
         _dbContext = dbContext;
+        _currentOrganizationService = currentOrganizationService;
     }
 
     public async Task<IReadOnlyList<CounterpartyListItemDto>> GetAllAsync(string? search = null, bool? isActive = null)
     {
-        var query = _dbContext.Counterparties.AsNoTracking().AsQueryable();
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
+        var query = _dbContext.Counterparties
+            .AsNoTracking()
+            .Where(x => x.OrganizationId == organizationId)
+            .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -25,7 +34,8 @@ public class CounterpartyService : ICounterpartyService
 
             query = query.Where(x =>
                 x.Inn.Contains(search) ||
-                x.FullName.Contains(search));
+                x.FullName.Contains(search) ||
+                x.AccountNumber.Contains(search));
         }
 
         if (isActive.HasValue)
@@ -50,9 +60,11 @@ public class CounterpartyService : ICounterpartyService
 
     public async Task<UpsertCounterpartyDto?> GetByIdAsync(Guid id)
     {
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
         return await _dbContext.Counterparties
             .AsNoTracking()
-            .Where(x => x.Id == id)
+            .Where(x => x.Id == id && x.OrganizationId == organizationId)
             .Select(x => new UpsertCounterpartyDto
             {
                 Id = x.Id,
@@ -69,12 +81,15 @@ public class CounterpartyService : ICounterpartyService
 
     public async Task<Guid> CreateAsync(UpsertCounterpartyDto dto)
     {
-        await ValidateUniquenessAsync(dto);
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
+        await ValidateUniquenessAsync(dto, organizationId);
 
         var entity = new Counterparty
         {
+            OrganizationId = organizationId,
             Inn = dto.Inn.Trim(),
-            Kpp = dto.Kpp.Trim(),
+            Kpp = dto.Kpp?.Trim(),
             FullName = dto.FullName.Trim(),
             Bic = dto.Bic.Trim(),
             AccountNumber = dto.AccountNumber.Trim(),
@@ -93,14 +108,18 @@ public class CounterpartyService : ICounterpartyService
         if (dto.Id == null || dto.Id == Guid.Empty)
             throw new InvalidOperationException("Идентификатор контрагента не указан.");
 
-        await ValidateUniquenessAsync(dto);
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
 
-        var entity = await _dbContext.Counterparties.FirstOrDefaultAsync(x => x.Id == dto.Id.Value);
+        await ValidateUniquenessAsync(dto, organizationId);
+
+        var entity = await _dbContext.Counterparties
+            .FirstOrDefaultAsync(x => x.Id == dto.Id.Value && x.OrganizationId == organizationId);
+
         if (entity == null)
             throw new InvalidOperationException("Контрагент не найден.");
 
         entity.Inn = dto.Inn.Trim();
-        entity.Kpp = dto.Kpp.Trim();
+        entity.Kpp = dto.Kpp?.Trim();
         entity.FullName = dto.FullName.Trim();
         entity.Bic = dto.Bic.Trim();
         entity.AccountNumber = dto.AccountNumber.Trim();
@@ -112,7 +131,11 @@ public class CounterpartyService : ICounterpartyService
 
     public async Task DeactivateAsync(Guid id)
     {
-        var entity = await _dbContext.Counterparties.FirstOrDefaultAsync(x => x.Id == id);
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
+        var entity = await _dbContext.Counterparties
+            .FirstOrDefaultAsync(x => x.Id == id && x.OrganizationId == organizationId);
+
         if (entity == null)
             return;
 
@@ -120,18 +143,19 @@ public class CounterpartyService : ICounterpartyService
         await _dbContext.SaveChangesAsync();
     }
 
-    private async Task ValidateUniquenessAsync(UpsertCounterpartyDto dto)
+    private async Task ValidateUniquenessAsync(UpsertCounterpartyDto dto, Guid organizationId)
     {
+        var currentId = dto.Id ?? Guid.Empty;
         var normalizedInn = dto.Inn.Trim();
         var normalizedAccount = dto.AccountNumber.Trim();
-        var currentId = dto.Id ?? Guid.Empty;
 
         var exists = await _dbContext.Counterparties.AnyAsync(x =>
+            x.OrganizationId == organizationId &&
             x.Id != currentId &&
             x.Inn == normalizedInn &&
             x.AccountNumber == normalizedAccount);
 
         if (exists)
-            throw new InvalidOperationException("Контрагент с таким ИНН и расчетным счетом уже существует.");
+            throw new InvalidOperationException("Контрагент с таким ИНН и счетом уже существует.");
     }
 }

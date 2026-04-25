@@ -11,17 +11,24 @@ public class ApprovalService : IApprovalService
 {
     private readonly OpenPayDbContext _dbContext;
     private readonly IAuditLogService _auditLogService;
+    private readonly ICurrentOrganizationService _currentOrganizationService;
 
-
-    public ApprovalService(OpenPayDbContext dbContext, IAuditLogService auditLogService)
+    public ApprovalService(
+        OpenPayDbContext dbContext,
+        IAuditLogService auditLogService,
+        ICurrentOrganizationService currentOrganizationService)
     {
         _dbContext = dbContext;
         _auditLogService = auditLogService;
+        _currentOrganizationService = currentOrganizationService;
     }
 
     public async Task SubmitForApprovalAsync(Guid paymentOrderId)
     {
-        var payment = await _dbContext.PaymentOrders.FirstOrDefaultAsync(x => x.Id == paymentOrderId);
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
+        var payment = await _dbContext.PaymentOrders
+            .FirstOrDefaultAsync(x => x.Id == paymentOrderId && x.OrganizationId == organizationId);
 
         if (payment == null)
             throw new InvalidOperationException("Платежное поручение не найдено.");
@@ -31,6 +38,7 @@ public class ApprovalService : IApprovalService
 
         payment.Status = PaymentStatus.PendingApproval;
         await _dbContext.SaveChangesAsync();
+
         await _auditLogService.LogAsync(
             AuditEventType.PaymentSubmittedForApproval,
             payment.CreatedByUserId,
@@ -41,10 +49,13 @@ public class ApprovalService : IApprovalService
 
     public async Task<IReadOnlyList<PendingApprovalListItemDto>> GetPendingApprovalsAsync()
     {
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
         return await _dbContext.PaymentOrders
             .AsNoTracking()
             .Include(x => x.Counterparty)
-            .Where(x => x.Status == PaymentStatus.PendingApproval)
+            .Where(x => x.OrganizationId == organizationId &&
+                        x.Status == PaymentStatus.PendingApproval)
             .OrderBy(x => x.CreatedAt)
             .Select(x => new PendingApprovalListItemDto
             {
@@ -52,7 +63,7 @@ public class ApprovalService : IApprovalService
                 DocumentNumber = x.DocumentNumber,
                 CreatedAt = x.CreatedAt,
                 PaymentDate = x.PaymentDate,
-                CounterpartyName = x.Counterparty!.FullName,
+                CounterpartyName = x.Counterparty != null ? x.Counterparty.FullName : "-",
                 Amount = x.Amount,
                 Currency = x.Currency,
                 Purpose = x.Purpose
@@ -62,26 +73,56 @@ public class ApprovalService : IApprovalService
 
     public async Task<ApprovalReviewDto?> GetReviewModelAsync(Guid paymentOrderId)
     {
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
         return await _dbContext.PaymentOrders
             .AsNoTracking()
             .Include(x => x.Counterparty)
             .Include(x => x.OrganizationBankAccount)
-            .Where(x => x.Id == paymentOrderId)
+            .Where(x => x.Id == paymentOrderId && x.OrganizationId == organizationId)
             .Select(x => new ApprovalReviewDto
             {
                 PaymentOrderId = x.Id,
                 DocumentNumber = x.DocumentNumber,
                 CreatedAt = x.CreatedAt,
                 PaymentDate = x.PaymentDate,
-                CounterpartyName = x.Counterparty!.FullName,
-                CounterpartyInn = x.Counterparty.Inn,
-                OrganizationAccountDisplay = x.OrganizationBankAccount!.BankName + " / " + x.OrganizationBankAccount.AccountNumber,
+                CounterpartyName = x.Counterparty != null ? x.Counterparty.FullName : "-",
+                CounterpartyInn = x.Counterparty != null ? x.Counterparty.Inn : "-",
+                OrganizationAccountDisplay = x.OrganizationBankAccount != null
+                    ? x.OrganizationBankAccount.BankName + " / " + x.OrganizationBankAccount.AccountNumber
+                    : "-",
                 Amount = x.Amount,
                 Currency = x.Currency,
                 Purpose = x.Purpose,
                 Status = x.Status.ToString()
             })
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<IReadOnlyList<ApprovalDecisionHistoryItemDto>> GetHistoryAsync(Guid paymentOrderId)
+    {
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
+        var history = await
+            (from decision in _dbContext.ApprovalDecisions.AsNoTracking()
+             join payment in _dbContext.PaymentOrders.AsNoTracking()
+                on decision.PaymentOrderId equals payment.Id
+             where decision.PaymentOrderId == paymentOrderId &&
+                   payment.OrganizationId == organizationId
+             join user in _dbContext.Users.AsNoTracking()
+                on decision.ApproverUserId equals user.Id into users
+             from user in users.DefaultIfEmpty()
+             orderby decision.CreatedAt descending
+             select new ApprovalDecisionHistoryItemDto
+             {
+                 CreatedAt = decision.CreatedAt,
+                 ApproverName = user != null ? user.FullName : decision.ApproverUserId,
+                 Decision = decision.Decision.ToString(),
+                 Comment = decision.Comment
+             })
+            .ToListAsync();
+
+        return history;
     }
 
     public async Task ApproveAsync(Guid paymentOrderId, string approverUserId, string? comment)
@@ -99,6 +140,7 @@ public class ApprovalService : IApprovalService
         });
 
         await _dbContext.SaveChangesAsync();
+
         await _auditLogService.LogAsync(
             AuditEventType.PaymentApproved,
             approverUserId,
@@ -125,6 +167,7 @@ public class ApprovalService : IApprovalService
         });
 
         await _dbContext.SaveChangesAsync();
+
         await _auditLogService.LogAsync(
             AuditEventType.PaymentRejected,
             approverUserId,
@@ -151,6 +194,7 @@ public class ApprovalService : IApprovalService
         });
 
         await _dbContext.SaveChangesAsync();
+
         await _auditLogService.LogAsync(
             AuditEventType.PaymentReturnedForRework,
             approverUserId,
@@ -161,7 +205,11 @@ public class ApprovalService : IApprovalService
 
     private async Task<PaymentOrder> GetPendingPaymentAsync(Guid paymentOrderId)
     {
-        var payment = await _dbContext.PaymentOrders.FirstOrDefaultAsync(x => x.Id == paymentOrderId);
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
+        var payment = await _dbContext.PaymentOrders
+            .FirstOrDefaultAsync(x => x.Id == paymentOrderId &&
+                                      x.OrganizationId == organizationId);
 
         if (payment == null)
             throw new InvalidOperationException("Платежное поручение не найдено.");
@@ -170,25 +218,5 @@ public class ApprovalService : IApprovalService
             throw new InvalidOperationException("Рассмотреть можно только платеж в статусе PendingApproval.");
 
         return payment;
-    }
-    public async Task<IReadOnlyList<ApprovalDecisionHistoryItemDto>> GetHistoryAsync(Guid paymentOrderId)
-    {
-        var history = await
-            (from decision in _dbContext.ApprovalDecisions.AsNoTracking()
-             where decision.PaymentOrderId == paymentOrderId
-             join user in _dbContext.Users.AsNoTracking()
-                 on decision.ApproverUserId equals user.Id into users
-             from user in users.DefaultIfEmpty()
-             orderby decision.CreatedAt descending
-             select new ApprovalDecisionHistoryItemDto
-             {
-                 CreatedAt = decision.CreatedAt,
-                 ApproverName = user != null ? user.FullName : decision.ApproverUserId,
-                 Decision = decision.Decision.ToString(),
-                 Comment = decision.Comment
-             })
-            .ToListAsync();
-
-        return history;
     }
 }

@@ -201,9 +201,15 @@ namespace OpenPay.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("OrganizationId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrganizationId");
 
                     b.ToTable("ApprovalRoutes");
                 });
@@ -226,12 +232,18 @@ namespace OpenPay.Infrastructure.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("IpAddress")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ObjectId")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ObjectType")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("OrganizationId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
@@ -239,6 +251,8 @@ namespace OpenPay.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrganizationId");
 
                     b.ToTable("AuditLogEntries");
                 });
@@ -260,6 +274,7 @@ namespace OpenPay.Infrastructure.Migrations
 
                     b.Property<string>("RawDataJson")
                         .IsRequired()
+                        .HasMaxLength(10000)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -287,6 +302,7 @@ namespace OpenPay.Infrastructure.Migrations
 
                     b.Property<string>("CorrespondentAccount")
                         .IsRequired()
+                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FullName")
@@ -307,9 +323,43 @@ namespace OpenPay.Infrastructure.Migrations
                         .HasMaxLength(9)
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("OrganizationId");
+
                     b.ToTable("Counterparties");
+                });
+
+            modelBuilder.Entity("OpenPay.Domain.Entities.Organization", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Inn")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Kpp")
+                        .IsRequired()
+                        .HasMaxLength(9)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Organizations");
                 });
 
             modelBuilder.Entity("OpenPay.Domain.Entities.OrganizationBankAccount", b =>
@@ -341,11 +391,17 @@ namespace OpenPay.Infrastructure.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
 
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ResponsibleUnit")
                         .IsRequired()
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrganizationId");
 
                     b.ToTable("OrganizationBankAccounts");
                 });
@@ -378,10 +434,12 @@ namespace OpenPay.Infrastructure.Migrations
 
                     b.Property<string>("CreatedByUserId")
                         .IsRequired()
+                        .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Currency")
                         .IsRequired()
+                        .HasMaxLength(3)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DocumentNumber")
@@ -390,6 +448,9 @@ namespace OpenPay.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("OrganizationBankAccountId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("OrganizationId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("PaymentDate")
@@ -417,6 +478,8 @@ namespace OpenPay.Infrastructure.Migrations
 
                     b.HasIndex("OrganizationBankAccountId");
 
+                    b.HasIndex("OrganizationId");
+
                     b.ToTable("PaymentOrders");
                 });
 
@@ -441,7 +504,13 @@ namespace OpenPay.Infrastructure.Migrations
 
                     b.Property<string>("FullName")
                         .IsRequired()
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(true);
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("INTEGER");
@@ -455,6 +524,9 @@ namespace OpenPay.Infrastructure.Migrations
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("OrganizationId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")
@@ -490,6 +562,8 @@ namespace OpenPay.Infrastructure.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
+
+                    b.HasIndex("OrganizationId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -556,6 +630,27 @@ namespace OpenPay.Infrastructure.Migrations
                     b.Navigation("PaymentOrder");
                 });
 
+            modelBuilder.Entity("OpenPay.Domain.Entities.ApprovalRoute", b =>
+                {
+                    b.HasOne("OpenPay.Domain.Entities.Organization", "Organization")
+                        .WithMany("ApprovalRoutes")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("OpenPay.Domain.Entities.AuditLogEntry", b =>
+                {
+                    b.HasOne("OpenPay.Domain.Entities.Organization", "Organization")
+                        .WithMany("AuditLogEntries")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Organization");
+                });
+
             modelBuilder.Entity("OpenPay.Domain.Entities.BankStatement", b =>
                 {
                     b.HasOne("OpenPay.Domain.Entities.OrganizationBankAccount", "OrganizationBankAccount")
@@ -565,6 +660,28 @@ namespace OpenPay.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("OrganizationBankAccount");
+                });
+
+            modelBuilder.Entity("OpenPay.Domain.Entities.Counterparty", b =>
+                {
+                    b.HasOne("OpenPay.Domain.Entities.Organization", "Organization")
+                        .WithMany("Counterparties")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("OpenPay.Domain.Entities.OrganizationBankAccount", b =>
+                {
+                    b.HasOne("OpenPay.Domain.Entities.Organization", "Organization")
+                        .WithMany("BankAccounts")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("OpenPay.Domain.Entities.PaymentOrder", b =>
@@ -585,11 +702,29 @@ namespace OpenPay.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("OpenPay.Domain.Entities.Organization", "Organization")
+                        .WithMany("PaymentOrders")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("ApprovalRoute");
 
                     b.Navigation("Counterparty");
 
+                    b.Navigation("Organization");
+
                     b.Navigation("OrganizationBankAccount");
+                });
+
+            modelBuilder.Entity("OpenPay.Infrastructure.Security.ApplicationUser", b =>
+                {
+                    b.HasOne("OpenPay.Domain.Entities.Organization", "Organization")
+                        .WithMany()
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("OpenPay.Domain.Entities.ApprovalRoute", b =>
@@ -599,6 +734,19 @@ namespace OpenPay.Infrastructure.Migrations
 
             modelBuilder.Entity("OpenPay.Domain.Entities.Counterparty", b =>
                 {
+                    b.Navigation("PaymentOrders");
+                });
+
+            modelBuilder.Entity("OpenPay.Domain.Entities.Organization", b =>
+                {
+                    b.Navigation("ApprovalRoutes");
+
+                    b.Navigation("AuditLogEntries");
+
+                    b.Navigation("BankAccounts");
+
+                    b.Navigation("Counterparties");
+
                     b.Navigation("PaymentOrders");
                 });
 

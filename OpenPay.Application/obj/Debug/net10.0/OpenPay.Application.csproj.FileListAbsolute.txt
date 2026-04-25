@@ -13,3 +13,4 @@ C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\obj\Debug\net10
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\obj\Debug\net10.0\refint\OpenPay.Application.dll
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\obj\Debug\net10.0\OpenPay.Application.pdb
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\obj\Debug\net10.0\ref\OpenPay.Application.dll
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Application\obj\Debug\net10.0\OpenPay.Application.sourcelink.json

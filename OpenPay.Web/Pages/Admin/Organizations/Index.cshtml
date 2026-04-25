@@ -1,0 +1,41 @@
+﻿@page
+@model OpenPay.Web.Pages.Admin.Organizations.IndexModel
+@{
+    ViewData["Title"] = "Организации";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Организации</h2>
+    <a asp-page="Create" class="btn btn-primary">Создать организацию</a>
+</div>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>ИНН</th>
+            <th>КПП</th>
+            <th>Активна</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Items.Count == 0)
+        {
+            <tr>
+                <td colspan="4" class="text-center">Организации не найдены</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Inn</td>
+                    <td>@item.Kpp</td>
+                    <td>@(item.IsActive ? "Да" : "Нет")</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

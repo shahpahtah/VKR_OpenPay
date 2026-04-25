@@ -11,18 +11,27 @@ public class PaymentOrderService : IPaymentOrderService
 {
     private readonly OpenPayDbContext _dbContext;
     private readonly IAuditLogService _auditLogService;
+    private readonly ICurrentOrganizationService _currentOrganizationService;
 
-    public PaymentOrderService(OpenPayDbContext dbContext, IAuditLogService auditLogService)
+    public PaymentOrderService(
+        OpenPayDbContext dbContext,
+        IAuditLogService auditLogService,
+        ICurrentOrganizationService currentOrganizationService)
     {
         _dbContext = dbContext;
         _auditLogService = auditLogService;
+        _currentOrganizationService = currentOrganizationService;
     }
+
     public async Task<IReadOnlyList<PaymentOrderListItemDto>> GetAllAsync(string? search = null)
     {
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
         var query = _dbContext.PaymentOrders
             .AsNoTracking()
             .Include(x => x.Counterparty)
             .Include(x => x.OrganizationBankAccount)
+            .Where(x => x.OrganizationId == organizationId)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(search))
@@ -32,7 +41,7 @@ public class PaymentOrderService : IPaymentOrderService
             query = query.Where(x =>
                 x.DocumentNumber.Contains(search) ||
                 x.Purpose.Contains(search) ||
-                x.Counterparty!.FullName.Contains(search));
+                (x.Counterparty != null && x.Counterparty.FullName.Contains(search)));
         }
 
         return await query
@@ -43,8 +52,10 @@ public class PaymentOrderService : IPaymentOrderService
                 DocumentNumber = x.DocumentNumber,
                 CreatedAt = x.CreatedAt,
                 PaymentDate = x.PaymentDate,
-                CounterpartyName = x.Counterparty!.FullName,
-                OrganizationAccountDisplay = x.OrganizationBankAccount!.BankName + " / " + x.OrganizationBankAccount.AccountNumber,
+                CounterpartyName = x.Counterparty != null ? x.Counterparty.FullName : "-",
+                OrganizationAccountDisplay = x.OrganizationBankAccount != null
+                    ? x.OrganizationBankAccount.BankName + " / " + x.OrganizationBankAccount.AccountNumber
+                    : "-",
                 Amount = x.Amount,
                 Currency = x.Currency,
                 Status = x.Status.ToString()
@@ -54,9 +65,11 @@ public class PaymentOrderService : IPaymentOrderService
 
     public async Task<UpsertPaymentOrderDto?> GetByIdAsync(Guid id)
     {
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
         return await _dbContext.PaymentOrders
             .AsNoTracking()
-            .Where(x => x.Id == id)
+            .Where(x => x.Id == id && x.OrganizationId == organizationId)
             .Select(x => new UpsertPaymentOrderDto
             {
                 Id = x.Id,
@@ -71,19 +84,22 @@ public class PaymentOrderService : IPaymentOrderService
                 BankReferenceId = x.BankReferenceId,
                 BankResponseMessage = x.BankResponseMessage,
                 SentAt = x.SentAt,
-                ProcessedAt = x.ProcessedAt,
+                ProcessedAt = x.ProcessedAt
             })
             .FirstOrDefaultAsync();
     }
 
     public async Task<Guid> CreateAsync(UpsertPaymentOrderDto dto, string createdByUserId)
     {
-        await ValidateReferencesAsync(dto);
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
+        await ValidateReferencesAsync(dto, organizationId);
 
         var entity = new PaymentOrder
         {
+            OrganizationId = organizationId,
             DocumentNumber = string.IsNullOrWhiteSpace(dto.DocumentNumber)
-                ? await GenerateDocumentNumberAsync()
+                ? await GenerateDocumentNumberAsync(organizationId)
                 : dto.DocumentNumber.Trim(),
             CreatedAt = DateTime.UtcNow,
             PaymentDate = dto.PaymentDate,
@@ -98,12 +114,13 @@ public class PaymentOrderService : IPaymentOrderService
 
         _dbContext.PaymentOrders.Add(entity);
         await _dbContext.SaveChangesAsync();
+
         await _auditLogService.LogAsync(
-        AuditEventType.PaymentCreated,
-        createdByUserId,
-        $"Создано платежное поручение {entity.DocumentNumber}",
-        entity.Id.ToString(),
-        nameof(PaymentOrder));
+            AuditEventType.PaymentCreated,
+            createdByUserId,
+            $"Создано платежное поручение {entity.DocumentNumber}",
+            entity.Id.ToString(),
+            nameof(PaymentOrder));
 
         return entity.Id;
     }
@@ -113,9 +130,13 @@ public class PaymentOrderService : IPaymentOrderService
         if (dto.Id == null || dto.Id == Guid.Empty)
             throw new InvalidOperationException("Идентификатор платежа не указан.");
 
-        await ValidateReferencesAsync(dto);
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
 
-        var entity = await _dbContext.PaymentOrders.FirstOrDefaultAsync(x => x.Id == dto.Id.Value);
+        await ValidateReferencesAsync(dto, organizationId);
+
+        var entity = await _dbContext.PaymentOrders
+            .FirstOrDefaultAsync(x => x.Id == dto.Id.Value && x.OrganizationId == organizationId);
+
         if (entity == null)
             throw new InvalidOperationException("Платежное поручение не найдено.");
 
@@ -133,6 +154,7 @@ public class PaymentOrderService : IPaymentOrderService
         entity.Purpose = dto.Purpose.Trim();
 
         await _dbContext.SaveChangesAsync();
+
         await _auditLogService.LogAsync(
             AuditEventType.PaymentUpdated,
             updatedByUserId,
@@ -141,11 +163,11 @@ public class PaymentOrderService : IPaymentOrderService
             nameof(PaymentOrder));
     }
 
-    private async Task ValidateReferencesAsync(UpsertPaymentOrderDto dto)
+    private async Task ValidateReferencesAsync(UpsertPaymentOrderDto dto, Guid organizationId)
     {
         var counterparty = await _dbContext.Counterparties
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == dto.CounterpartyId);
+            .FirstOrDefaultAsync(x => x.Id == dto.CounterpartyId && x.OrganizationId == organizationId);
 
         if (counterparty == null)
             throw new InvalidOperationException("Выбранный контрагент не найден.");
@@ -155,7 +177,7 @@ public class PaymentOrderService : IPaymentOrderService
 
         var account = await _dbContext.OrganizationBankAccounts
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == dto.OrganizationBankAccountId);
+            .FirstOrDefaultAsync(x => x.Id == dto.OrganizationBankAccountId && x.OrganizationId == organizationId);
 
         if (account == null)
             throw new InvalidOperationException("Выбранный счет организации не найден.");
@@ -164,10 +186,14 @@ public class PaymentOrderService : IPaymentOrderService
             throw new InvalidOperationException("Выбранный счет организации деактивирован.");
     }
 
-    private async Task<string> GenerateDocumentNumberAsync()
+    private async Task<string> GenerateDocumentNumberAsync(Guid organizationId)
     {
         var prefix = $"PAY-{DateTime.UtcNow:yyyyMM}-";
-        var count = await _dbContext.PaymentOrders.CountAsync(x => x.DocumentNumber.StartsWith(prefix));
+
+        var count = await _dbContext.PaymentOrders.CountAsync(x =>
+            x.OrganizationId == organizationId &&
+            x.DocumentNumber.StartsWith(prefix));
+
         return prefix + (count + 1).ToString("D4");
     }
 }

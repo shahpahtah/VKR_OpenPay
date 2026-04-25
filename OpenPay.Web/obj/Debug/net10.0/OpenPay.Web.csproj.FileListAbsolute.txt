@@ -9,7 +9,6 @@ C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\OpenP
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\OpenPay.Web.pdb
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\Azure.Core.dll
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\Azure.Identity.dll
-C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\EntityFramework.dll
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\Humanizer.dll
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.dll
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
@@ -58,7 +57,6 @@ C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\Syste
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\System.Memory.Data.dll
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\System.Security.Cryptography.ProtectedData.dll
-C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\ru\EntityFramework.resources.dll
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\cs\Microsoft.CodeAnalysis.resources.dll
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\de\Microsoft.CodeAnalysis.resources.dll
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\es\Microsoft.CodeAnalysis.resources.dll
@@ -324,4 +322,12 @@ C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\obj\Debug\net10.0\refin
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\obj\Debug\net10.0\OpenPay.Web.pdb
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\obj\Debug\net10.0\OpenPay.Web.genruntimeconfig.cache
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\obj\Debug\net10.0\ref\OpenPay.Web.dll
-C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\obj\Debug\net10.0\OpenPay.Web.sourcelink.json
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\ClosedXML.dll
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\ClosedXML.Parser.dll
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\DocumentFormat.OpenXml.dll
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\DocumentFormat.OpenXml.Framework.dll
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\ExcelNumberFormat.dll
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\RBush.dll
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\SixLabors.Fonts.dll
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Web\bin\Debug\net10.0\System.IO.Packaging.dll

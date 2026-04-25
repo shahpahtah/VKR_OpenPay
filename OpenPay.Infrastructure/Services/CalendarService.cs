@@ -8,24 +8,32 @@ namespace OpenPay.Infrastructure.Services;
 public class CalendarService : ICalendarService
 {
     private readonly OpenPayDbContext _dbContext;
+    private readonly ICurrentOrganizationService _currentOrganizationService;
 
-    public CalendarService(OpenPayDbContext dbContext)
+    public CalendarService(
+        OpenPayDbContext dbContext,
+        ICurrentOrganizationService currentOrganizationService)
     {
         _dbContext = dbContext;
+        _currentOrganizationService = currentOrganizationService;
     }
 
     public async Task<IReadOnlyList<CalendarDayDto>> GetCalendarAsync(DateTime? from, DateTime? to)
     {
-        var dateFrom = (from?.Date ?? DateTime.Today);
-        var dateToInclusive = (to?.Date ?? DateTime.Today.AddDays(30));
+        var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
+
+        var dateFrom = from?.Date ?? DateTime.Today;
+        var dateToInclusive = to?.Date ?? DateTime.Today.AddDays(30);
         var dateToExclusive = dateToInclusive.AddDays(1);
 
         var payments = await _dbContext.PaymentOrders
             .AsNoTracking()
             .Include(x => x.Counterparty)
-            .Where(x => x.PaymentDate.HasValue &&
-                        x.PaymentDate.Value >= dateFrom &&
-                        x.PaymentDate.Value < dateToExclusive)
+            .Where(x =>
+                x.OrganizationId == organizationId &&
+                x.PaymentDate.HasValue &&
+                x.PaymentDate.Value >= dateFrom &&
+                x.PaymentDate.Value < dateToExclusive)
             .OrderBy(x => x.PaymentDate)
             .ThenBy(x => x.DocumentNumber)
             .Select(x => new

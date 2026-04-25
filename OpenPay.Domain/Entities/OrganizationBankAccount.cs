@@ -10,4 +10,6 @@ public class OrganizationBankAccount : BaseEntity
     public bool IsActive { get; set; } = true;
 
     public ICollection<PaymentOrder> PaymentOrders { get; set; } = new List<PaymentOrder>();
+    public Guid OrganizationId { get; set; }
+    public Organization? Organization { get; set; }
 }

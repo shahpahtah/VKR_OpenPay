@@ -4,5 +4,6 @@ public enum UserRole
 {
     Accountant = 1,
     Manager = 2,
-    Administrator = 3
+    Administrator = 3,
+    PlatformAdmin = 4
 }

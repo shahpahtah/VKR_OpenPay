@@ -11,10 +11,14 @@ namespace OpenPay.Web.Pages.Reports;
 public class IndexModel : PageModel
 {
     private readonly IReportService _reportService;
+    private readonly IReportExportService _reportExportService;
 
-    public IndexModel(IReportService reportService)
+    public IndexModel(
+        IReportService reportService,
+        IReportExportService reportExportService)
     {
         _reportService = reportService;
+        _reportExportService = reportExportService;
     }
 
     public ReportOverviewDto Report { get; private set; } = new();
@@ -28,5 +32,26 @@ public class IndexModel : PageModel
     public async Task OnGetAsync()
     {
         Report = await _reportService.GetOverviewAsync(DateFrom, DateTo);
+    }
+
+    public async Task<IActionResult> OnPostExportCsvAsync()
+    {
+        var report = await _reportService.GetOverviewAsync(DateFrom, DateTo);
+        var bytes = _reportExportService.ExportToCsv(report);
+
+        var fileName = $"report_{DateTime.Now:yyyyMMdd_HHmmss}.csv";
+        return File(bytes, "text/csv; charset=utf-8", fileName);
+    }
+
+    public async Task<IActionResult> OnPostExportExcelAsync()
+    {
+        var report = await _reportService.GetOverviewAsync(DateFrom, DateTo);
+        var bytes = _reportExportService.ExportToExcel(report);
+
+        var fileName = $"report_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+        return File(
+            bytes,
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            fileName);
     }
 }

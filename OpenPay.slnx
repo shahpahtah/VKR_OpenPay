@@ -2,5 +2,6 @@
   <Project Path="OpenPay.Application/OpenPay.Application.csproj" />
   <Project Path="OpenPay.Domain/OpenPay.Domain.csproj" />
   <Project Path="OpenPay.Infrastructure/OpenPay.Infrastructure.csproj" />
+  <Project Path="OpenPay.Tests/OpenPay.Tests.csproj" />
   <Project Path="OpenPay.Web/OpenPay.Web.csproj" />
 </Solution>

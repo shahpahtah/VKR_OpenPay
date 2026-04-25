@@ -1,0 +1,50 @@
+﻿@page "{id}"
+@model OpenPay.Web.Pages.Admin.Users.EditModel
+@{
+    ViewData["Title"] = "Редактирование пользователя";
+}
+
+<h2 class="mb-3">Редактирование пользователя</h2>
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+<form method="post">
+    <input asp-for="Item.Id" type="hidden" />
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label asp-for="Item.FullName" class="form-label"></label>
+            <input asp-for="Item.FullName" class="form-control" />
+            <span asp-validation-for="Item.FullName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Item.Email" class="form-label"></label>
+            <input asp-for="Item.Email" class="form-control" />
+            <span asp-validation-for="Item.Email" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Item.Role" class="form-label"></label>
+            <select asp-for="Item.Role" asp-items="Model.RoleOptions" class="form-select">
+            </select>
+            <span asp-validation-for="Item.Role" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 d-flex align-items-center">
+            <div class="form-check mt-4">
+                <input asp-for="Item.IsActive" class="form-check-input" />
+                <label asp-for="Item.IsActive" class="form-check-label"></label>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a asp-page="Index" class="btn btn-secondary">Назад</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

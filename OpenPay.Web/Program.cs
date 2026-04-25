@@ -5,6 +5,7 @@ using OpenPay.Infrastructure.Banking;
 using OpenPay.Infrastructure.Persistence;
 using OpenPay.Infrastructure.Security;
 using OpenPay.Infrastructure.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -12,6 +13,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<OpenPayDbContext>(options =>
     options.UseSqlite(connectionString));
+
 builder.Services
     .AddDefaultIdentity<ApplicationUser>(options =>
     {
@@ -29,6 +31,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/Identity/Account/Login";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
+
 builder.Services.AddScoped<ICounterpartyService, CounterpartyService>();
 builder.Services.AddScoped<IOrganizationBankAccountService, OrganizationBankAccountService>();
 builder.Services.AddScoped<IPaymentOrderService, PaymentOrderService>();
@@ -39,7 +42,13 @@ builder.Services.AddScoped<IBankGatewayService, FakeBankGatewayService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<ICalendarService, CalendarService>();
 builder.Services.AddScoped<IBankStatusProcessor, BankStatusProcessor>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentOrganizationService, CurrentOrganizationService>();
 builder.Services.AddHostedService<BankStatusBackgroundService>();
+builder.Services.AddScoped<IUserManagementService, UserManagementService>();
+builder.Services.AddScoped<IOrganizationManagementService, OrganizationManagementService>();
+builder.Services.AddScoped<IReportExportService, ReportExportService>();
+
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
@@ -58,15 +67,21 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapRazorPages();
 
-using (var scope = app.Services.CreateScope())
+if (!app.Environment.IsEnvironment("Testing"))
 {
+    using var scope = app.Services.CreateScope();
     var services = scope.ServiceProvider;
 
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var dbContext = services.GetRequiredService<OpenPayDbContext>();
 
-    await IdentitySeeder.SeedAsync(userManager, roleManager);
+    await dbContext.Database.MigrateAsync();
+    await IdentitySeeder.SeedAsync(userManager, roleManager, dbContext);
 }
+
+app.MapRazorPages();
+
 app.Run();
+public partial class Program { }

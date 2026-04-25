@@ -1,0 +1,54 @@
+﻿@page
+@model OpenPay.Web.Pages.Admin.Users.CreateModel
+@{
+    ViewData["Title"] = "Создание сотрудника";
+}
+
+<h2 class="mb-3">Создание сотрудника</h2>
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+<form method="post">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label asp-for="Item.FullName" class="form-label"></label>
+            <input asp-for="Item.FullName" class="form-control" />
+            <span asp-validation-for="Item.FullName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Item.Email" class="form-label"></label>
+            <input asp-for="Item.Email" class="form-control" />
+            <span asp-validation-for="Item.Email" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Item.Password" class="form-label"></label>
+            <input asp-for="Item.Password" class="form-control" />
+            <span asp-validation-for="Item.Password" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Item.ConfirmPassword" class="form-label"></label>
+            <input asp-for="Item.ConfirmPassword" class="form-control" />
+            <span asp-validation-for="Item.ConfirmPassword" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Item.Role" class="form-label"></label>
+            <select asp-for="Item.Role" asp-items="Model.RoleOptions" class="form-select">
+                <option value="">-- выберите роль --</option>
+            </select>
+            <span asp-validation-for="Item.Role" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary">Создать</button>
+        <a asp-page="Index" class="btn btn-secondary">Назад</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

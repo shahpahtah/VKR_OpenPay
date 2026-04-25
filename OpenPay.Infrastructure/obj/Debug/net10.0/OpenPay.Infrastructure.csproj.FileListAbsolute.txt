@@ -17,3 +17,4 @@ C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Infrastructure\obj\Debug\ne
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Infrastructure\obj\Debug\net10.0\OpenPay.Infrastructure.pdb
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Infrastructure\obj\Debug\net10.0\OpenPay.Infrastructure.genruntimeconfig.cache
 C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Infrastructure\obj\Debug\net10.0\ref\OpenPay.Infrastructure.dll
+C:\Users\kirill.omakaev\source\repos\OpenPay\OpenPay.Infrastructure\obj\Debug\net10.0\OpenPay.Infrastructure.sourcelink.json
