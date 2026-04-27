@@ -13,6 +13,7 @@ public class OpenPayDbContext : IdentityDbContext<ApplicationUser>
     }
 
     public DbSet<Organization> Organizations => Set<Organization>();
+    public DbSet<BankConnection> BankConnections => Set<BankConnection>();
     public DbSet<Counterparty> Counterparties => Set<Counterparty>();
     public DbSet<OrganizationBankAccount> OrganizationBankAccounts => Set<OrganizationBankAccount>();
     public DbSet<ApprovalRoute> ApprovalRoutes => Set<ApprovalRoute>();
@@ -30,6 +31,21 @@ public class OpenPayDbContext : IdentityDbContext<ApplicationUser>
             entity.Property(x => x.Name).HasMaxLength(300).IsRequired();
             entity.Property(x => x.Inn).HasMaxLength(12).IsRequired();
             entity.Property(x => x.Kpp).HasMaxLength(9).IsRequired();
+        });
+
+        builder.Entity<BankConnection>(entity =>
+        {
+            entity.Property(x => x.BankCode).HasMaxLength(50).IsRequired();
+            entity.Property(x => x.DisplayName).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.ProtectedAccessToken).HasMaxLength(4000);
+            entity.Property(x => x.ProtectedRefreshToken).HasMaxLength(4000);
+
+            entity.HasOne(x => x.Organization)
+                .WithMany(x => x.BankConnections)
+                .HasForeignKey(x => x.OrganizationId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(x => new { x.OrganizationId, x.DisplayName }).IsUnique();
         });
 
         builder.Entity<ApplicationUser>(entity =>
@@ -56,6 +72,7 @@ public class OpenPayDbContext : IdentityDbContext<ApplicationUser>
                 .WithMany(x => x.Counterparties)
                 .HasForeignKey(x => x.OrganizationId)
                 .OnDelete(DeleteBehavior.Restrict);
+            entity.HasIndex(x => new { x.OrganizationId, x.Inn }).IsUnique();
         });
 
         builder.Entity<OrganizationBankAccount>(entity =>
@@ -70,6 +87,11 @@ public class OpenPayDbContext : IdentityDbContext<ApplicationUser>
                 .WithMany(x => x.BankAccounts)
                 .HasForeignKey(x => x.OrganizationId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(x => x.BankConnection)
+                .WithMany(x => x.BankAccounts)
+                .HasForeignKey(x => x.BankConnectionId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         builder.Entity<ApprovalRoute>(entity =>
@@ -87,9 +109,11 @@ public class OpenPayDbContext : IdentityDbContext<ApplicationUser>
             entity.Property(x => x.DocumentNumber).HasMaxLength(50).IsRequired();
             entity.Property(x => x.Purpose).HasMaxLength(1000).IsRequired();
             entity.Property(x => x.Currency).HasMaxLength(3).IsRequired();
+            entity.Property(x => x.ExpenseType).HasMaxLength(100);
             entity.Property(x => x.Amount).HasColumnType("decimal(18,2)");
             entity.Property(x => x.BankReferenceId).HasMaxLength(100);
             entity.Property(x => x.BankResponseMessage).HasMaxLength(2000);
+            entity.Property(x => x.SignatureReference).HasMaxLength(100);
             entity.Property(x => x.CreatedByUserId).HasMaxLength(450).IsRequired();
 
             entity.HasOne(x => x.Organization)
@@ -112,6 +136,11 @@ public class OpenPayDbContext : IdentityDbContext<ApplicationUser>
         builder.Entity<BankStatement>(entity =>
         {
             entity.Property(x => x.RawDataJson).HasMaxLength(10000);
+
+            entity.HasOne(x => x.Organization)
+                .WithMany()
+                .HasForeignKey(x => x.OrganizationId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         builder.Entity<AuditLogEntry>(entity =>

@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using OpenPay.Application.Common;
 using OpenPay.Application.Interfaces;
 using OpenPay.Infrastructure.Persistence;
 
@@ -36,11 +37,28 @@ public class CurrentOrganizationService : ICurrentOrganizationService
 
     public async Task<Guid> GetRequiredOrganizationIdAsync()
     {
-        var organizationId = await GetCurrentOrganizationIdAsync();
+        var userId = _httpContextAccessor.HttpContext?.User?
+            .FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (organizationId == null || organizationId == Guid.Empty)
+        if (string.IsNullOrWhiteSpace(userId))
+            throw new InvalidOperationException("Не удалось определить текущего пользователя.");
+
+        var result = await _dbContext.Users
+            .AsNoTracking()
+            .Where(x => x.Id == userId)
+            .Select(x => new
+            {
+                x.OrganizationId,
+                OrganizationIsActive = x.Organization != null ? x.Organization.IsActive : (bool?)null
+            })
+            .FirstOrDefaultAsync();
+
+        if (result == null || result.OrganizationId == null || result.OrganizationId == Guid.Empty)
             throw new InvalidOperationException("Для текущего пользователя не определена организация.");
 
-        return organizationId.Value;
+        if (result.OrganizationIsActive != true)
+            throw new OrganizationInactiveException();
+
+        return result.OrganizationId.Value;
     }
 }

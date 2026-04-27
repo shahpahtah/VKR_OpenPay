@@ -1,10 +1,249 @@
 ﻿@page
-@model IndexModel
+@model OpenPay.Web.Pages.IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Главная";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@functions {
+    public string GetStatusCss(string status) => status switch
+    {
+        "Draft" => "badge-soft badge-draft",
+        "PendingApproval" => "badge-soft badge-pending",
+        "Approved" => "badge-soft badge-approved",
+        "Executed" => "badge-soft badge-executed",
+        "Rejected" => "badge-soft badge-rejected",
+        "Error" => "badge-soft badge-error",
+        "Sent" => "badge-soft badge-approved",
+        "Rework" => "badge-soft badge-pending",
+        _ => "badge-soft badge-draft"
+    };
+
+    public string GetStatusText(string status) => status switch
+    {
+        "Draft" => "Черновик",
+        "PendingApproval" => "На согласовании",
+        "Approved" => "Согласован",
+        "Rejected" => "Отклонен",
+        "Rework" => "На доработке",
+        "Sent" => "Отправлен в банк",
+        "Executed" => "Исполнен",
+        "Error" => "Ошибка",
+        _ => status
+    };
+}
+
+@if (!Model.IsAuthenticated)
+{
+    <div class="section-card">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+                <div class="mb-2 text-muted">Корпоративная система управления платежами</div>
+                <h1 class="mb-3">OpenPay</h1>
+                <p class="text-muted mb-4">
+                    Платежный агрегатор с управлением ролями, согласованием, банковской обработкой,
+                    календарем, отчетностью и экспортом.
+                </p>
+                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary btn-lg">Войти в систему</a>
+            </div>
+            <div class="col-lg-5">
+                <div class="section-card bg-light border-0 shadow-none">
+                    <h5 class="mb-3">Что уже реализовано</h5>
+                    <div class="d-flex flex-column gap-2 text-muted">
+                        <div>• Управление контрагентами и счетами</div>
+                        <div>• Жизненный цикл платежа</div>
+                        <div>• Согласование и доработка</div>
+                        <div>• Фоновая банковская обработка</div>
+                        <div>• Календарь и отчетность</div>
+                        <div>• Экспорт CSV / Excel</div>
+                        <div>• Multi-organization архитектура</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="page-actions">
+        <div>
+            <h2 class="mb-1">Рабочая панель</h2>
+            <div class="text-muted">Краткая сводка по системе и быстрые действия</div>
+        </div>
+    </div>
+
+    @if (Model.IsPlatformAdmin)
+    {
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="kpi-card">
+                    <div class="kpi-label">Организаций в системе</div>
+                    <div class="kpi-value">@Model.OrganizationCount</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h5 class="mb-3">Действия платформы</h5>
+            <div class="d-flex flex-wrap gap-2">
+                <a asp-page="/Admin/Organizations/Index" class="btn btn-primary">Открыть организации</a>
+                <a asp-page="/Admin/Organizations/Create" class="btn btn-outline-secondary">Создать организацию</a>
+            </div>
+        </div>
+    }
+
+    @if (Model.CanSeeOperations && Model.Report != null)
+    {
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="kpi-card">
+                    <div class="kpi-label">Всего платежей</div>
+                    <div class="kpi-value">@Model.Report.TotalPaymentsCount</div>
+                    <div class="text-muted mt-2">@Model.Report.TotalPaymentsAmount.ToString("N2")</div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="kpi-card">
+                    <div class="kpi-label">Исполнено</div>
+                    <div class="kpi-value">@Model.Report.ExecutedPaymentsCount</div>
+                    <div class="text-muted mt-2">@Model.Report.ExecutedPaymentsAmount.ToString("N2")</div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="kpi-card">
+                    <div class="kpi-label">На согласовании</div>
+                    <div class="kpi-value">@Model.Report.PendingApprovalCount</div>
+                    <div class="text-muted mt-2">@Model.Report.PendingApprovalAmount.ToString("N2")</div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="kpi-card">
+                    <div class="kpi-label">Ошибки</div>
+                    <div class="kpi-value">@Model.Report.ErrorPaymentsCount</div>
+                    <div class="text-muted mt-2">@Model.Report.ErrorPaymentsAmount.ToString("N2")</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card mb-4">
+            <h5 class="mb-3">Быстрые действия</h5>
+            <div class="d-flex flex-wrap gap-2">
+                <a asp-page="/Payments/Create" class="btn btn-primary">Создать платеж</a>
+                <a asp-page="/Counterparties/Index" class="btn btn-outline-secondary">Контрагенты</a>
+                <a asp-page="/Accounts/Index" class="btn btn-outline-secondary">Счета</a>
+                <a asp-page="/Reports/Index" class="btn btn-outline-secondary">Отчетность</a>
+                <a asp-page="/Calendar/Index" class="btn btn-outline-secondary">Календарь</a>
+            </div>
+        </div>
+    }
+
+    <div class="row g-4">
+        @if (Model.CanSeeOperations)
+        {
+            <div class="col-lg-7">
+                <div class="section-card h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0">Последние платежи</h5>
+                        <a asp-page="/Payments/Index" class="btn btn-sm btn-outline-secondary">Все платежи</a>
+                    </div>
+
+                    @if (Model.RecentPayments.Count == 0)
+                    {
+                        <div class="empty-state">
+                            <div class="mb-2">Платежей пока нет</div>
+                            <a asp-page="/Payments/Create" class="btn btn-primary">Создать платеж</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Номер</th>
+                                        <th>Контрагент</th>
+                                        <th>Сумма</th>
+                                        <th>Статус</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.RecentPayments)
+                                    {
+                                        <tr>
+                                            <td class="fw-semibold">@item.DocumentNumber</td>
+                                            <td>@item.CounterpartyName</td>
+                                            <td>@item.Amount.ToString("N2") @item.Currency</td>
+                                            <td>
+                                                <span class="@GetStatusCss(item.Status)">
+                                                    @GetStatusText(item.Status)
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (Model.CanSeeApprovals)
+        {
+            <div class="col-lg-5">
+                <div class="section-card h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0">Ожидают согласования</h5>
+                        <a asp-page="/Approvals/Index" class="btn btn-sm btn-outline-secondary">Открыть</a>
+                    </div>
+
+                    @if (Model.PendingApprovals.Count == 0)
+                    {
+                        <div class="empty-state">
+                            <div>Нет документов на согласовании</div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="d-flex flex-column gap-3">
+                            @foreach (var item in Model.PendingApprovals)
+                            {
+                                <div class="p-3 rounded-3 border bg-white">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div class="fw-semibold">@item.DocumentNumber</div>
+                                        <div class="text-muted small">@item.Amount.ToString("N2") @item.Currency</div>
+                                    </div>
+
+                                    <div class="text-muted small mb-2">
+                                        @item.CounterpartyName
+                                    </div>
+
+                                    <div class="text-muted small mb-3">
+                                        Дата платежа: @(item.PaymentDate?.ToString("dd.MM.yyyy") ?? "-")
+                                    </div>
+
+                                    <a asp-page="/Approvals/Review" asp-route-id="@item.PaymentOrderId" class="btn btn-sm btn-primary">
+                                        Рассмотреть
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (Model.IsAdministrator)
+    {
+        <div class="section-card mt-4">
+            <h5 class="mb-3">Администрирование</h5>
+            <div class="d-flex flex-wrap gap-2">
+                <a asp-page="/Admin/Users/Index" class="btn btn-outline-secondary">Пользователи</a>
+                <a asp-page="/Admin/Index" class="btn btn-outline-secondary">Аудит</a>
+            </div>
+        </div>
+    }
+}

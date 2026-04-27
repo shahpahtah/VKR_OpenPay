@@ -34,6 +34,10 @@ public class UpsertPaymentOrderDto
     [Display(Name = "Валюта")]
     public string Currency { get; set; } = "RUB";
 
+    [StringLength(100)]
+    [Display(Name = "Тип расхода")]
+    public string ExpenseType { get; set; } = string.Empty;
+
     [Required(ErrorMessage = "Назначение платежа обязательно")]
     [StringLength(1000)]
     [Display(Name = "Назначение платежа")]
@@ -45,6 +49,10 @@ public class UpsertPaymentOrderDto
         CurrentStatus == PaymentStatus.Rework;
     public string? BankReferenceId { get; set; }
     public string? BankResponseMessage { get; set; }
+    public DateTime? SignedAt { get; set; }
+    public string? SignatureReference { get; set; }
     public DateTime? SentAt { get; set; }
     public DateTime? ProcessedAt { get; set; }
+    public Guid? ApprovalRouteId { get; set; }
+    public string? ApprovalRouteName { get; set; }
 }

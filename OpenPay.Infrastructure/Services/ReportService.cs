@@ -68,6 +68,18 @@ public class ReportService : IReportService
             .OrderBy(x => x.Status)
             .ToList();
 
+        var counterpartySummary = items
+            .GroupBy(x => x.CounterpartyName)
+            .Select(g => new CounterpartySummaryDto
+            {
+                CounterpartyName = g.Key,
+                Count = g.Count(),
+                TotalAmount = g.Sum(x => x.Amount)
+            })
+            .OrderByDescending(x => x.TotalAmount)
+            .ThenBy(x => x.CounterpartyName)
+            .ToList();
+
         var executedItems = items.Where(x => x.Status == PaymentStatus.Executed.ToString()).ToList();
         var pendingApprovalItems = items.Where(x => x.Status == PaymentStatus.PendingApproval.ToString()).ToList();
         var errorItems = items.Where(x => x.Status == PaymentStatus.Error.ToString()).ToList();
@@ -90,6 +102,7 @@ public class ReportService : IReportService
             ErrorPaymentsAmount = errorItems.Sum(x => x.Amount),
 
             StatusSummary = statusSummary,
+            CounterpartySummary = counterpartySummary,
             Items = items
         };
     }

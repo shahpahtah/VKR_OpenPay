@@ -3,12 +3,14 @@
 @{
     ViewData["Title"] = "Контрагенты";
 }
-
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Контрагенты</h2>
-    <a asp-page="Create" class="btn btn-primary">Добавить контрагента</a>
-</div>
 
+    <div class="d-flex gap-2">
+        <a asp-page="Create" class="btn btn-primary">Добавить контрагента</a>
+        <a asp-page="Import" class="btn btn-outline-secondary">Импорт CSV</a>
+    </div>
+</div>
 <form method="get" class="row g-2 mb-3">
     <div class="col-md-6">
         <input asp-for="Search" class="form-control" placeholder="Поиск по ИНН или наименованию" />

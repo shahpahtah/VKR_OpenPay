@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using OpenPay.Application.DTOs.Counterparties;
 using OpenPay.Application.Interfaces;
 using OpenPay.Domain.Enums;
+
 namespace OpenPay.Web.Pages.Counterparties;
 
 [Authorize(Roles = $"{nameof(UserRole.Accountant)},{nameof(UserRole.Administrator)}")]
@@ -37,7 +38,7 @@ public class EditModel : PageModel
         try
         {
             await _counterpartyService.UpdateAsync(Item);
-            TempData["SuccessMessage"] = "Контрагент успешно обновлен.";
+            TempData["SuccessMessage"] = "Контрагент обновлен.";
             return RedirectToPage("Index");
         }
         catch (InvalidOperationException ex)

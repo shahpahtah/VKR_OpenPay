@@ -1,59 +1,72 @@
-﻿@page
+@page
 @model OpenPay.Web.Pages.Accounts.CreateModel
 @{
     ViewData["Title"] = "Создание счета";
 }
 
-<h2 class="mb-3">Создание банковского счета</h2>
+<div class="page-actions">
+    <div>
+        <h2 class="mb-1">Создание банковского счета</h2>
+        <div class="text-muted">Счет связывается с банковским демо-подключением для отправки платежей и выписок</div>
+    </div>
+    <a asp-page="Index" class="btn btn-outline-secondary">Назад</a>
+</div>
 
-<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+<div class="section-card">
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-<form method="post">
-    <div class="row g-3">
-        <div class="col-md-4">
-            <label asp-for="Item.Bic" class="form-label"></label>
-            <input asp-for="Item.Bic" class="form-control" />
-            <span asp-validation-for="Item.Bic" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-4">
-            <label asp-for="Item.AccountNumber" class="form-label"></label>
-            <input asp-for="Item.AccountNumber" class="form-control" />
-            <span asp-validation-for="Item.AccountNumber" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-4">
-            <label asp-for="Item.Currency" class="form-label"></label>
-            <input asp-for="Item.Currency" class="form-control" />
-            <span asp-validation-for="Item.Currency" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-8">
-            <label asp-for="Item.BankName" class="form-label"></label>
-            <input asp-for="Item.BankName" class="form-control" />
-            <span asp-validation-for="Item.BankName" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-4">
-            <label asp-for="Item.ResponsibleUnit" class="form-label"></label>
-            <input asp-for="Item.ResponsibleUnit" class="form-control" />
-            <span asp-validation-for="Item.ResponsibleUnit" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-12">
-            <div class="form-check">
-                <input asp-for="Item.IsActive" class="form-check-input" />
-                <label asp-for="Item.IsActive" class="form-check-label"></label>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label asp-for="Item.Bic" class="form-label"></label>
+                <input asp-for="Item.Bic" class="form-control js-bic" />
+                <span asp-validation-for="Item.Bic" class="text-danger"></span>
+                <div class="form-text js-bic-hint">9 цифр БИК банка.</div>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Item.AccountNumber" class="form-label"></label>
+                <input asp-for="Item.AccountNumber" class="form-control js-account" />
+                <span asp-validation-for="Item.AccountNumber" class="text-danger"></span>
+                <div class="form-text js-account-hint">20 цифр, проверяется вместе с БИК.</div>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Item.Currency" class="form-label"></label>
+                <input asp-for="Item.Currency" class="form-control" />
+                <span asp-validation-for="Item.Currency" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Item.BankName" class="form-label"></label>
+                <input asp-for="Item.BankName" class="form-control" />
+                <span asp-validation-for="Item.BankName" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Item.BankConnectionId" class="form-label"></label>
+                <select asp-for="Item.BankConnectionId" asp-items="Model.BankConnectionOptions" class="form-select">
+                    <option value="">-- выберите подключение --</option>
+                </select>
+                <span asp-validation-for="Item.BankConnectionId" class="text-danger"></span>
+            </div>
+            <div class="col-md-8">
+                <label asp-for="Item.ResponsibleUnit" class="form-label"></label>
+                <input asp-for="Item.ResponsibleUnit" class="form-control" />
+                <span asp-validation-for="Item.ResponsibleUnit" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <div class="form-check">
+                    <input asp-for="Item.IsActive" class="form-check-input" />
+                    <label asp-for="Item.IsActive" class="form-check-label"></label>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="mt-4">
-        <button type="submit" class="btn btn-primary">Сохранить</button>
-        <a asp-page="Index" class="btn btn-secondary">Отмена</a>
-    </div>
-</form>
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a asp-page="Index" class="btn btn-outline-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/bank-validation.js" asp-append-version="true"></script>
 }

@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using OpenPay.Application.DTOs.Counterparties;
 using OpenPay.Application.Interfaces;
 using OpenPay.Domain.Enums;
+
 namespace OpenPay.Web.Pages.Counterparties;
+
 [Authorize(Roles = $"{nameof(UserRole.Accountant)},{nameof(UserRole.Administrator)}")]
 public class CreateModel : PageModel
 {
@@ -30,7 +32,7 @@ public class CreateModel : PageModel
         try
         {
             await _counterpartyService.CreateAsync(Item);
-            TempData["SuccessMessage"] = "Контрагент успешно создан.";
+            TempData["SuccessMessage"] = "Контрагент создан.";
             return RedirectToPage("Index");
         }
         catch (InvalidOperationException ex)

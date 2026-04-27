@@ -8,4 +8,5 @@ public interface IPaymentOrderService
     Task<UpsertPaymentOrderDto?> GetByIdAsync(Guid id);
     Task<Guid> CreateAsync(UpsertPaymentOrderDto dto, string createdByUserId);
     Task UpdateAsync(UpsertPaymentOrderDto dto, string updatedByUserId);
+    Task<PaymentOrderImportResultDto> ImportFromCsvAsync(Stream csvStream, string createdByUserId);
 }

@@ -12,15 +12,18 @@ public class ApprovalService : IApprovalService
     private readonly OpenPayDbContext _dbContext;
     private readonly IAuditLogService _auditLogService;
     private readonly ICurrentOrganizationService _currentOrganizationService;
+    private readonly IBankProcessingService _bankProcessingService;
 
     public ApprovalService(
         OpenPayDbContext dbContext,
         IAuditLogService auditLogService,
-        ICurrentOrganizationService currentOrganizationService)
+        ICurrentOrganizationService currentOrganizationService,
+        IBankProcessingService bankProcessingService)
     {
         _dbContext = dbContext;
         _auditLogService = auditLogService;
         _currentOrganizationService = currentOrganizationService;
+        _bankProcessingService = bankProcessingService;
     }
 
     public async Task SubmitForApprovalAsync(Guid paymentOrderId)
@@ -147,6 +150,23 @@ public class ApprovalService : IApprovalService
             $"Платеж {payment.DocumentNumber} утвержден",
             payment.Id.ToString(),
             nameof(PaymentOrder));
+
+        try
+        {
+            await _bankProcessingService.SendToBankAsync(payment.Id, approverUserId);
+        }
+        catch (InvalidOperationException ex)
+        {
+            payment.BankResponseMessage = $"Автоотправка не выполнена: {ex.Message}";
+            await _dbContext.SaveChangesAsync();
+
+            await _auditLogService.LogAsync(
+                AuditEventType.PaymentBankError,
+                approverUserId,
+                $"Автоотправка платежа {payment.DocumentNumber} не выполнена: {ex.Message}",
+                payment.Id.ToString(),
+                nameof(PaymentOrder));
+        }
     }
 
     public async Task RejectAsync(Guid paymentOrderId, string approverUserId, string comment)

@@ -1,0 +1,66 @@
+@page "{id:guid}"
+@model OpenPay.Web.Pages.Admin.ApprovalRoutes.EditModel
+@{
+    ViewData["Title"] = "Редактирование маршрута";
+}
+
+<div class="page-actions">
+    <div>
+        <h2 class="mb-1">Редактирование маршрута согласования</h2>
+        <div class="text-muted">Изменения будут применяться к новым и обновленным черновикам платежей</div>
+    </div>
+    <a asp-page="Index" class="btn btn-outline-secondary">Назад</a>
+</div>
+
+<div class="section-card">
+    <form method="post">
+        <input asp-for="Item.Id" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="Item.Name" class="form-label"></label>
+                <input asp-for="Item.Name" class="form-control" />
+                <span asp-validation-for="Item.Name" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="Item.MinAmount" class="form-label"></label>
+                <input asp-for="Item.MinAmount" class="form-control" />
+                <span asp-validation-for="Item.MinAmount" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="Item.MaxAmount" class="form-label"></label>
+                <input asp-for="Item.MaxAmount" class="form-control" />
+                <span asp-validation-for="Item.MaxAmount" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Item.ExpenseType" class="form-label"></label>
+                <input asp-for="Item.ExpenseType" class="form-control" placeholder="Аренда, поставщики, налоги" />
+                <span asp-validation-for="Item.ExpenseType" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Item.Department" class="form-label"></label>
+                <input asp-for="Item.Department" class="form-control" placeholder="Бухгалтерия, закупки" />
+                <span asp-validation-for="Item.Department" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Item.ApprovalType" class="form-label"></label>
+                <select asp-for="Item.ApprovalType" asp-items="Model.ApprovalTypeOptions" class="form-select"></select>
+                <span asp-validation-for="Item.ApprovalType" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <div class="form-check">
+                    <input asp-for="Item.IsActive" class="form-check-input" />
+                    <label asp-for="Item.IsActive" class="form-check-label"></label>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a asp-page="Index" class="btn btn-outline-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

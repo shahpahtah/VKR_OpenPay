@@ -1,48 +1,77 @@
 ﻿@page
 @model OpenPay.Web.Pages.Approvals.IndexModel
 @{
-    ViewData["Title"] = "Согласование платежей";
+    ViewData["Title"] = "Согласование";
 }
 
-<h2 class="mb-3">Платежи на согласовании</h2>
-
-<table class="table table-striped table-bordered">
-    <thead>
-        <tr>
-            <th>Номер</th>
-            <th>Дата создания</th>
-            <th>Дата платежа</th>
-            <th>Контрагент</th>
-            <th>Сумма</th>
-            <th>Назначение</th>
-            <th style="width: 130px;">Действия</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.Items.Count == 0)
-        {
-            <tr>
-                <td colspan="7" class="text-center">Нет платежей на согласовании</td>
-            </tr>
-        }
-        else
-        {
-            @foreach (var item in Model.Items)
-            {
-                <tr>
-                    <td>@item.DocumentNumber</td>
-                    <td>@item.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
-                    <td>@(item.PaymentDate?.ToString("dd.MM.yyyy") ?? "-")</td>
-                    <td>@item.CounterpartyName</td>
-                    <td>@item.Amount.ToString("N2") @item.Currency</td>
-                    <td>@item.Purpose</td>
-                    <td>
-                        <a asp-page="Review" asp-route-id="@item.PaymentOrderId" class="btn btn-sm btn-outline-primary">
-                            Рассмотреть
-                        </a>
-                    </td>
-                </tr>
-            }
-        }
-    </tbody>
-</table>
+<div class="page-actions">
+    <div>
+        <h2 class="mb-1">Платежи на согласовании</h2>
+        <div class="text-muted">Документы, ожидающие решения руководителя</div>
+    </div>
+</div>
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="kpi-card">
+            <div class="kpi-label">Документов на согласовании</div>
+            <div class="kpi-value">@Model.Items.Count</div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="kpi-card">
+            <div class="kpi-label">Общая сумма</div>
+            <div class="kpi-value">@Model.Items.Sum(x => x.Amount).ToString("N2")</div>
+        </div>
+    </div>
+</div>
+<div class="section-card">
+    @if (Model.Items.Count == 0)
+    {
+        <div class="empty-state">
+            <h5 class="mb-2">Нет платежей на согласовании</h5>
+            <div>Новые документы появятся здесь после отправки бухгалтером на согласование.</div>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Номер</th>
+                        <th>Дата создания</th>
+                        <th>Дата платежа</th>
+                        <th>Контрагент</th>
+                        <th>Сумма</th>
+                        <th>Назначение</th>
+                        <th style="width: 160px;">Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@item.DocumentNumber</td>
+                            <td>@item.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                            <td>@(item.PaymentDate?.ToString("dd.MM.yyyy") ?? "-")</td>
+                            <td>@item.CounterpartyName</td>
+                            <td class="fw-semibold">@item.Amount.ToString("N2") @item.Currency</td>
+                            <td>
+                                <div class="text-truncate" style="max-width: 280px;" title="@item.Purpose">
+                                    @item.Purpose
+                                </div>
+                            </td>
+                            <td>
+                                <a asp-page="Review"
+                                   asp-route-id="@item.PaymentOrderId"
+                                   class="btn btn-sm btn-primary">
+                                    Рассмотреть
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

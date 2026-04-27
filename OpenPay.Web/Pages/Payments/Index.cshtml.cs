@@ -15,9 +15,9 @@ public class IndexModel : PageModel
     private readonly IBankProcessingService _bankProcessingService;
 
     public IndexModel(
-       IPaymentOrderService paymentOrderService,
-       IApprovalService approvalService,
-       IBankProcessingService bankProcessingService)
+        IPaymentOrderService paymentOrderService,
+        IApprovalService approvalService,
+        IBankProcessingService bankProcessingService)
     {
         _paymentOrderService = paymentOrderService;
         _approvalService = approvalService;
@@ -48,6 +48,7 @@ public class IndexModel : PageModel
 
         return RedirectToPage(new { Search });
     }
+
     public async Task<IActionResult> OnPostSendToBankAsync(Guid id)
     {
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -57,7 +58,7 @@ public class IndexModel : PageModel
         try
         {
             await _bankProcessingService.SendToBankAsync(id, userId);
-            TempData["SuccessMessage"] = "Платеж отправлен в банк.";
+            TempData["SuccessMessage"] = "Платеж подписан и отправлен в банк.";
         }
         catch (InvalidOperationException ex)
         {

@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using OpenPay.Application.DTOs.Counterparties;
 using OpenPay.Application.DTOs.Payments;
 using OpenPay.Application.Interfaces;
-using OpenPay.Infrastructure.Security;
 using OpenPay.Domain.Enums;
+using OpenPay.Infrastructure.Security;
+
 namespace OpenPay.Web.Pages.Payments;
+
 [Authorize(Roles = $"{nameof(UserRole.Accountant)},{nameof(UserRole.Administrator)}")]
 public class CreateModel : PageModel
 {
@@ -31,7 +34,7 @@ public class CreateModel : PageModel
     [BindProperty]
     public UpsertPaymentOrderDto Item { get; set; } = new();
 
-    public List<SelectListItem> CounterpartyOptions { get; private set; } = [];
+    public IReadOnlyList<CounterpartyListItemDto> Counterparties { get; private set; } = [];
     public List<SelectListItem> AccountOptions { get; private set; } = [];
 
     public async Task OnGetAsync()
@@ -65,22 +68,14 @@ public class CreateModel : PageModel
 
     private async Task LoadOptionsAsync()
     {
-        var counterparties = await _counterpartyService.GetAllAsync(null, true);
+        Counterparties = await _counterpartyService.GetAllAsync(null, true);
         var accounts = await _accountService.GetAllAsync(null, true);
-
-        CounterpartyOptions = counterparties
-            .Select(x => new SelectListItem
-            {
-                Value = x.Id.ToString(),
-                Text = $"{x.FullName} ({x.Inn})"
-            })
-            .ToList();
 
         AccountOptions = accounts
             .Select(x => new SelectListItem
             {
                 Value = x.Id.ToString(),
-                Text = $"{x.BankName} / {x.AccountNumber}"
+                Text = $"{x.BankName} / {x.AccountNumber} / {x.Currency}"
             })
             .ToList();
     }

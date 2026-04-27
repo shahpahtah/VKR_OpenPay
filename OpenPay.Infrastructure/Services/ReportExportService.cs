@@ -25,6 +25,17 @@ public class ReportExportService : IReportExportService
             sb.Append(Escape(item.Status)).AppendLine();
         }
 
+        sb.AppendLine();
+        sb.AppendLine("Сводка по контрагентам");
+        sb.AppendLine("Контрагент;Количество;Сумма");
+
+        foreach (var item in report.CounterpartySummary)
+        {
+            sb.Append(Escape(item.CounterpartyName)).Append(';');
+            sb.Append(item.Count).Append(';');
+            sb.Append(item.TotalAmount.ToString("F2", CultureInfo.InvariantCulture)).AppendLine();
+        }
+
         return Encoding.UTF8.GetBytes(sb.ToString());
     }
 
@@ -34,9 +45,11 @@ public class ReportExportService : IReportExportService
 
         var summarySheet = workbook.Worksheets.Add("Сводка");
         var paymentsSheet = workbook.Worksheets.Add("Платежи");
+        var counterpartySheet = workbook.Worksheets.Add("Контрагенты");
 
         FillSummarySheet(summarySheet, report);
         FillPaymentsSheet(paymentsSheet, report);
+        FillCounterpartySheet(counterpartySheet, report);
 
         using var stream = new MemoryStream();
         workbook.SaveAs(stream);
@@ -126,6 +139,28 @@ public class ReportExportService : IReportExportService
             ws.Cell(row, 5).Value = item.Amount;
             ws.Cell(row, 6).Value = item.Currency;
             ws.Cell(row, 7).Value = item.Status;
+            row++;
+        }
+
+        ws.Columns().AdjustToContents();
+    }
+
+    private static void FillCounterpartySheet(IXLWorksheet ws, ReportOverviewDto report)
+    {
+        ws.Cell("A1").Value = "Контрагент";
+        ws.Cell("B1").Value = "Количество";
+        ws.Cell("C1").Value = "Сумма";
+
+        var header = ws.Range("A1:C1");
+        header.Style.Font.Bold = true;
+        header.Style.Fill.BackgroundColor = XLColor.LightGray;
+
+        var row = 2;
+        foreach (var item in report.CounterpartySummary)
+        {
+            ws.Cell(row, 1).Value = item.CounterpartyName;
+            ws.Cell(row, 2).Value = item.Count;
+            ws.Cell(row, 3).Value = item.TotalAmount;
             row++;
         }
 

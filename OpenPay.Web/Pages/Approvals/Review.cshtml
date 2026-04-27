@@ -4,78 +4,123 @@
     ViewData["Title"] = "Рассмотрение платежа";
 }
 
+
 @if (Model.Item == null)
 {
-    <div class="alert alert-danger">Платеж не найден.</div>
+    <div class="section-card">
+        <div class="empty-state">
+            <h5 class="mb-2">Платеж не найден</h5>
+            <div class="mb-3">Возможно, документ был удален или у вас нет к нему доступа.</div>
+            <a asp-page="Index" class="btn btn-secondary">Назад к списку</a>
+        </div>
+    </div>
 }
 else
 {
-    <h2 class="mb-3">Рассмотрение платежа</h2>
-
-    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-    <div class="card mb-4">
-        <div class="card-body">
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <strong>Номер:</strong><br />
-                    @Model.Item.DocumentNumber
-                </div>
-                <div class="col-md-4">
-                    <strong>Дата создания:</strong><br />
-                    @Model.Item.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
-                </div>
-                <div class="col-md-4">
-                    <strong>Дата платежа:</strong><br />
-                    @(Model.Item.PaymentDate?.ToString("dd.MM.yyyy") ?? "-")
-                </div>
-
-                <div class="col-md-6">
-                    <strong>Контрагент:</strong><br />
-                    @Model.Item.CounterpartyName
-                </div>
-                <div class="col-md-6">
-                    <strong>ИНН:</strong><br />
-                    @Model.Item.CounterpartyInn
-                </div>
-
-                <div class="col-md-6">
-                    <strong>Счет организации:</strong><br />
-                    @Model.Item.OrganizationAccountDisplay
-                </div>
-                <div class="col-md-3">
-                    <strong>Сумма:</strong><br />
-                    @Model.Item.Amount.ToString("N2") @Model.Item.Currency
-                </div>
-                <div class="col-md-3">
-                    <strong>Статус:</strong><br />
-                    @Model.Item.Status
-                </div>
-
-                <div class="col-md-12">
-                    <strong>Назначение платежа:</strong><br />
-                    @Model.Item.Purpose
-                </div>
-            </div>
+    <div class="page-actions">
+        <div>
+            <h2 class="mb-1">Рассмотрение платежа</h2>
+            <div class="text-muted">Проверьте реквизиты и примите решение по документу</div>
+        </div>
+        <div>
+            <a asp-page="Index" class="btn btn-outline-secondary">Назад</a>
         </div>
     </div>
 
-    <form method="post">
-        <input asp-for="ActionModel.PaymentOrderId" type="hidden" />
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-        <div class="mb-3">
-            <label asp-for="ActionModel.Comment" class="form-label"></label>
-            <textarea asp-for="ActionModel.Comment" class="form-control" rows="4"></textarea>
-            <span asp-validation-for="ActionModel.Comment" class="text-danger"></span>
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="section-card h-100">
+                <div class="d-flex justify-content-between align-items-start mb-4">
+                    <div>
+                        <div class="text-muted small mb-1">Платежное поручение</div>
+                        <div class="fs-5 fw-semibold">@Model.Item.DocumentNumber</div>
+                    </div>
+                    <span class="@UiText.PaymentStatusCss(Model.Item.Status)">
+                        @UiText.PaymentStatusText(Model.Item.Status)
+                    </span>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="text-muted small mb-1">Дата создания</div>
+                        <div class="fw-semibold">@Model.Item.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="text-muted small mb-1">Дата платежа</div>
+                        <div class="fw-semibold">@(Model.Item.PaymentDate?.ToString("dd.MM.yyyy") ?? "-")</div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="text-muted small mb-1">Сумма</div>
+                        <div class="fw-semibold">@Model.Item.Amount.ToString("N2") @Model.Item.Currency</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="text-muted small mb-1">Контрагент</div>
+                        <div class="fw-semibold">@Model.Item.CounterpartyName</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="text-muted small mb-1">ИНН</div>
+                        <div class="fw-semibold">@Model.Item.CounterpartyInn</div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="text-muted small mb-1">Счет организации</div>
+                        <div class="fw-semibold">@Model.Item.OrganizationAccountDisplay</div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="text-muted small mb-1">Назначение платежа</div>
+                        <div class="p-3 rounded-3 bg-light border">
+                            @Model.Item.Purpose
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="d-flex gap-2">
-            <button type="submit" asp-page-handler="Approve" class="btn btn-success">Утвердить</button>
-            <button type="submit" asp-page-handler="Reject" class="btn btn-danger">Отклонить</button>
-            <button type="submit" asp-page-handler="Rework" class="btn btn-warning">На доработку</button>
-            <a asp-page="Index" class="btn btn-secondary">Назад</a>
+        <div class="col-lg-4">
+            <div class="section-card">
+                <h5 class="mb-3">Решение</h5>
+
+                <form method="post">
+                    <input asp-for="ActionModel.PaymentOrderId" type="hidden" />
+
+                    <div class="mb-3">
+                        <label asp-for="ActionModel.Comment" class="form-label"></label>
+                        <textarea asp-for="ActionModel.Comment" class="form-control" rows="6" placeholder="Добавьте комментарий при необходимости"></textarea>
+                        <span asp-validation-for="ActionModel.Comment" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" asp-page-handler="Approve" class="btn btn-success">
+                            Утвердить
+                        </button>
+
+                        <button type="submit" asp-page-handler="Reject" class="btn btn-danger">
+                            Отклонить
+                        </button>
+
+                        <button type="submit" asp-page-handler="Rework" class="btn btn-warning">
+                            На доработку
+                        </button>
+
+                        <a asp-page="Index" class="btn btn-outline-secondary">
+                            Назад к списку
+                        </a>
+                    </div>
+
+                    <div class="mt-3 small text-muted">
+                        Для отклонения и возврата на доработку рекомендуется указывать комментарий.
+                    </div>
+                </form>
+            </div>
         </div>
-    </form>
+    </div>
 }
 
 @section Scripts {

@@ -8,5 +8,6 @@ public class OrganizationBankAccountListItemDto
     public string BankName { get; set; } = string.Empty;
     public string Currency { get; set; } = string.Empty;
     public string ResponsibleUnit { get; set; } = string.Empty;
+    public string BankConnectionDisplay { get; set; } = string.Empty;
     public bool IsActive { get; set; }
 }

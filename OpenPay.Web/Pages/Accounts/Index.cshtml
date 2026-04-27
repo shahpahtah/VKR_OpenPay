@@ -4,27 +4,36 @@
     ViewData["Title"] = "Банковские счета";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Банковские счета организации</h2>
+<div class="page-actions">
+    <div>
+        <h2 class="mb-1">Банковские счета организации</h2>
+        <div class="text-muted">Счета, валюты, подразделения и привязка к банковским адаптерам</div>
+    </div>
     <a asp-page="Create" class="btn btn-primary">Добавить счет</a>
 </div>
 
-<form method="get" class="row g-2 mb-3">
-    <div class="col-md-6">
-        <input asp-for="Search" class="form-control" placeholder="Поиск по банку, БИК, счету, подразделению" />
-    </div>
-    <div class="col-md-3 d-flex align-items-center">
-        <div class="form-check">
-            <input asp-for="ShowInactive" class="form-check-input" />
-            <label asp-for="ShowInactive" class="form-check-label">Показывать неактивные</label>
+<div class="section-card mb-4">
+    <form method="get" class="row g-3 align-items-end">
+        <div class="col-md-6">
+            <label asp-for="Search" class="form-label">Поиск</label>
+            <input asp-for="Search" class="form-control" placeholder="Банк, БИК, счет, подразделение" />
         </div>
-    </div>
-    <div class="col-md-3">
-        <button type="submit" class="btn btn-outline-secondary">Найти</button>
-    </div>
-</form>
+        <div class="col-md-3 d-flex align-items-center">
+            <div class="form-check">
+                <input asp-for="ShowInactive" class="form-check-input" />
+                <label asp-for="ShowInactive" class="form-check-label">Показывать неактивные</label>
+            </div>
+        </div>
+        <div class="col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-primary flex-grow-1">Найти</button>
+            <a asp-page="Index" class="btn btn-outline-secondary">Сбросить</a>
+        </div>
+    </form>
+</div>
 
-<table class="table table-striped table-bordered">
+<div class="section-card">
+<div class="table-responsive">
+<table class="table table-hover align-middle mb-0">
     <thead>
         <tr>
             <th>Банк</th>
@@ -32,6 +41,7 @@
             <th>Номер счета</th>
             <th>Валюта</th>
             <th>Ответственное подразделение</th>
+            <th>Подключение</th>
             <th>Статус</th>
             <th style="width: 220px;">Действия</th>
         </tr>
@@ -40,7 +50,7 @@
     @if (Model.Items.Count == 0)
     {
         <tr>
-            <td colspan="7" class="text-center">Записи не найдены</td>
+            <td colspan="8" class="text-center text-muted py-4">Записи не найдены</td>
         </tr>
     }
     else
@@ -53,14 +63,15 @@
                 <td>@item.AccountNumber</td>
                 <td>@item.Currency</td>
                 <td>@item.ResponsibleUnit</td>
+                <td>@item.BankConnectionDisplay</td>
                 <td>
                     @if (item.IsActive)
                     {
-                        <span class="badge bg-success">Активен</span>
+                        <span class="badge-soft badge-executed">Активен</span>
                     }
                     else
                     {
-                        <span class="badge bg-secondary">Неактивен</span>
+                        <span class="badge-soft badge-draft">Неактивен</span>
                     }
                 </td>
                 <td>
@@ -81,3 +92,5 @@
     }
     </tbody>
 </table>
+</div>
+</div>

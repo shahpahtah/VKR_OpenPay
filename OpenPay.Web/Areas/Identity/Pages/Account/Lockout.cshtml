@@ -1,0 +1,25 @@
+@page
+@model LockoutModel
+@{
+    ViewData["Title"] = "Доступ ограничен";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="section-card text-center">
+            <div class="mb-3" style="font-size: 52px;">🔒</div>
+            <h2 class="mb-2">Доступ ограничен</h2>
+            <p class="text-muted mb-4">
+                Ваша учетная запись временно заблокирована или деактивирована.
+            </p>
+            <p class="text-muted mb-4">
+                Обратитесь к администратору, если считаете, что это произошло по ошибке.
+            </p>
+
+            <div class="d-flex justify-content-center gap-2 flex-wrap">
+                <a asp-page="/Account/Login" class="btn btn-primary">К странице входа</a>
+                <a asp-page="/Index" class="btn btn-outline-secondary">На главную</a>
+            </div>
+        </div>
+    </div>
+</div>

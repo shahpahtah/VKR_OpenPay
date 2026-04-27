@@ -9,4 +9,5 @@ public interface ICounterpartyService
     Task<Guid> CreateAsync(UpsertCounterpartyDto dto);
     Task UpdateAsync(UpsertCounterpartyDto dto);
     Task DeactivateAsync(Guid id);
+    Task<CounterpartyImportResultDto> ImportFromCsvAsync(Stream csvStream);
 }

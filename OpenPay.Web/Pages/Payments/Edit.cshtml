@@ -1,185 +1,347 @@
 ﻿@page "{id:guid}"
 @model OpenPay.Web.Pages.Payments.EditModel
+@using System.Text.Json
 @{
-    ViewData["Title"] = "Карточка платежного поручения";
+    ViewData["Title"] = "Карточка платежа";
 }
 
-<h2 class="mb-3">Карточка платежного поручения</h2>
+@functions {
+    public string GetStatusCss(string status) => status switch
+    {
+        "Draft" => "badge-soft badge-draft",
+        "PendingApproval" => "badge-soft badge-pending",
+        "Approved" => "badge-soft badge-approved",
+        "Executed" => "badge-soft badge-executed",
+        "Rejected" => "badge-soft badge-rejected",
+        "Error" => "badge-soft badge-error",
+        "Sent" => "badge-soft badge-approved",
+        "Rework" => "badge-soft badge-pending",
+        _ => "badge-soft badge-draft"
+    };
 
-<div class="mb-3">
-    @if (Model.Item.CurrentStatus == OpenPay.Domain.Enums.PaymentStatus.Draft)
+    public string GetStatusText(string status) => status switch
     {
-        <span class="badge bg-secondary">Draft</span>
-    }
-    else if (Model.Item.CurrentStatus == OpenPay.Domain.Enums.PaymentStatus.PendingApproval)
-    {
-        <span class="badge bg-warning text-dark">PendingApproval</span>
-    }
-    else if (Model.Item.CurrentStatus == OpenPay.Domain.Enums.PaymentStatus.Approved)
-    {
-        <span class="badge bg-success">Approved</span>
-    }
-    else if (Model.Item.CurrentStatus == OpenPay.Domain.Enums.PaymentStatus.Rejected)
-    {
-        <span class="badge bg-danger">Rejected</span>
-    }
-    else if (Model.Item.CurrentStatus == OpenPay.Domain.Enums.PaymentStatus.Rework)
-    {
-        <span class="badge bg-info text-dark">Rework</span>
-    }
-    else if (Model.Item.CurrentStatus == OpenPay.Domain.Enums.PaymentStatus.Sent)
-    {
-        <span class="badge bg-primary">Sent</span>
-    }
-    else if (Model.Item.CurrentStatus == OpenPay.Domain.Enums.PaymentStatus.Executed)
-    {
-        <span class="badge bg-success">Executed</span>
-    }
-    else if (Model.Item.CurrentStatus == OpenPay.Domain.Enums.PaymentStatus.Error)
-    {
-        <span class="badge bg-danger">Error</span>
-    }
-    else
-    {
-        <span class="badge bg-secondary">@Model.Item.CurrentStatus</span>
-    }
-</div>
+        "Draft" => "Черновик",
+        "PendingApproval" => "На согласовании",
+        "Approved" => "Согласован",
+        "Rejected" => "Отклонен",
+        "Rework" => "На доработке",
+        "ReadyToSend" => "Готов к отправке",
+        "Sent" => "Отправлен в банк",
+        "Executed" => "Исполнен",
+        "Error" => "Ошибка",
+        _ => status
+    };
 
-@if (!Model.Item.CanEdit)
-{
-    <div class="alert alert-secondary">
-        Документ доступен только для просмотра. Редактирование разрешено только для статусов Draft и Rework.
-    </div>
+    public bool IsEditable(string status) =>
+        status == "Draft" || status == "Rework";
 }
 
-<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-<form method="post">
-    <input asp-for="Item.Id" type="hidden" />
-
-    <div class="row g-3">
-        <div class="col-md-4">
-            <label asp-for="Item.DocumentNumber" class="form-label"></label>
-            <input asp-for="Item.DocumentNumber" class="form-control" readonly="@(Model.Item.CanEdit ? null : "readonly")" />
-            <span asp-validation-for="Item.DocumentNumber" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-4">
-            <label asp-for="Item.PaymentDate" class="form-label"></label>
-            <input asp-for="Item.PaymentDate" type="date" class="form-control" readonly="@(Model.Item.CanEdit ? null : "readonly")" />
-            <span asp-validation-for="Item.PaymentDate" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-4">
-            <label asp-for="Item.Currency" class="form-label"></label>
-            <input asp-for="Item.Currency" class="form-control" readonly="@(Model.Item.CanEdit ? null : "readonly")" />
-            <span asp-validation-for="Item.Currency" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-6">
-            <label asp-for="Item.CounterpartyId" class="form-label"></label>
-            <select asp-for="Item.CounterpartyId" asp-items="Model.CounterpartyOptions" class="form-select" disabled="@(!Model.Item.CanEdit)">
-                <option value="">-- выберите контрагента --</option>
-            </select>
-            <span asp-validation-for="Item.CounterpartyId" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-6">
-            <label asp-for="Item.OrganizationBankAccountId" class="form-label"></label>
-            <select asp-for="Item.OrganizationBankAccountId" asp-items="Model.AccountOptions" class="form-select" disabled="@(!Model.Item.CanEdit)">
-                <option value="">-- выберите счет организации --</option>
-            </select>
-            <span asp-validation-for="Item.OrganizationBankAccountId" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-4">
-            <label asp-for="Item.Amount" class="form-label"></label>
-            <input asp-for="Item.Amount" class="form-control" readonly="@(Model.Item.CanEdit ? null : "readonly")" />
-            <span asp-validation-for="Item.Amount" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-8">
-            <label asp-for="Item.Purpose" class="form-label"></label>
-            <input asp-for="Item.Purpose" class="form-control" readonly="@(Model.Item.CanEdit ? null : "readonly")" />
-            <span asp-validation-for="Item.Purpose" class="text-danger"></span>
-        </div>
-    </div>
-
-    <div class="mt-4">
-        @if (Model.Item.CanEdit)
-        {
-            <button type="submit" class="btn btn-primary">Сохранить</button>
-        }
-        <a asp-page="Index" class="btn btn-secondary">Назад</a>
-    </div>
-</form>
-@if (!string.IsNullOrWhiteSpace(Model.Item.BankReferenceId) ||
-    !string.IsNullOrWhiteSpace(Model.Item.BankResponseMessage) ||
-    Model.Item.SentAt.HasValue ||
-    Model.Item.ProcessedAt.HasValue)
+@if (Model.Item == null)
 {
-    <div class="card mt-4">
-        <div class="card-header">
-            Банковская обработка
+    <div class="section-card">
+        <div class="empty-state">
+            <h5 class="mb-2">Платеж не найден</h5>
+            <div class="mb-3">Документ отсутствует или недоступен для просмотра.</div>
+            <a asp-page="Index" class="btn btn-outline-secondary">Назад к списку</a>
         </div>
-        <div class="card-body">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <strong>Reference банка:</strong><br />
-                    @(string.IsNullOrWhiteSpace(Model.Item.BankReferenceId) ? "-" : Model.Item.BankReferenceId)
-                </div>
-                <div class="col-md-3">
-                    <strong>Отправлено:</strong><br />
-                    @(Model.Item.SentAt?.ToLocalTime().ToString("dd.MM.yyyy HH:mm") ?? "-")
-                </div>
-                <div class="col-md-3">
-                    <strong>Обработано:</strong><br />
-                    @(Model.Item.ProcessedAt?.ToLocalTime().ToString("dd.MM.yyyy HH:mm") ?? "-")
-                </div>
-                <div class="col-md-12">
-                    <strong>Ответ банка:</strong><br />
-                    @(string.IsNullOrWhiteSpace(Model.Item.BankResponseMessage) ? "-" : Model.Item.BankResponseMessage)
-                </div>
+    </div>
+}
+else
+{
+    var currentStatus = Model.Item.CurrentStatus.ToString();
+    var editable = IsEditable(currentStatus);
+
+    <div class="page-actions">
+        <div>
+            <h2 class="mb-1">Карточка платежного поручения</h2>
+            <div class="text-muted">Просмотр и редактирование реквизитов документа</div>
+        </div>
+
+        <div class="d-flex gap-2 align-items-center">
+            <span class="@GetStatusCss(currentStatus)">
+                @GetStatusText(currentStatus)
+            </span>
+            <a asp-page="Index" class="btn btn-outline-secondary">Назад к списку</a>
+        </div>
+    </div>
+
+    @if (!editable)
+    {
+        <div class="alert alert-info border-0 shadow-sm">
+            Документ находится в статусе <strong>@GetStatusText(currentStatus)</strong> и доступен только для просмотра.
+        </div>
+    }
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="section-card">
+                <form method="post">
+                    <input asp-for="Item.Id" type="hidden" />
+                    <input asp-for="Item.CounterpartyId" type="hidden" id="counterpartyId" />
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label asp-for="Item.DocumentNumber" class="form-label"></label>
+                            <input asp-for="Item.DocumentNumber" class="form-control" placeholder="Номер документа" disabled="@(!editable)" />
+                            <span asp-validation-for="Item.DocumentNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="Item.PaymentDate" class="form-label"></label>
+                            <input asp-for="Item.PaymentDate" type="date" class="form-control" disabled="@(!editable)" />
+                            <span asp-validation-for="Item.PaymentDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="Item.Currency" class="form-label"></label>
+                            <input asp-for="Item.Currency" class="form-control" disabled="@(!editable)" />
+                            <span asp-validation-for="Item.Currency" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="Item.ExpenseType" class="form-label"></label>
+                            <input asp-for="Item.ExpenseType" class="form-control" disabled="@(!editable)" />
+                            <span asp-validation-for="Item.ExpenseType" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-12 position-relative">
+                            <label class="form-label">Контрагент</label>
+                            <input type="text"
+                                   id="counterpartySearch"
+                                   class="form-control"
+                                   placeholder="Введите ИНН или название контрагента"
+                                   autocomplete="off"
+                                   disabled="@(!editable)" />
+                            <div id="counterpartyResults"
+                                 class="list-group position-absolute w-100 shadow-sm d-none"
+                                 style="z-index: 1000; max-height: 260px; overflow-y: auto;"></div>
+                            <span asp-validation-for="Item.CounterpartyId" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div id="counterpartyPreview" class="p-3 rounded-3 border bg-light d-none">
+                                <div><strong>Контрагент:</strong> <span id="previewName"></span></div>
+                                <div><strong>ИНН:</strong> <span id="previewInn"></span></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-8">
+                            <label asp-for="Item.OrganizationBankAccountId" class="form-label"></label>
+                            <select asp-for="Item.OrganizationBankAccountId" asp-items="Model.AccountOptions" class="form-select" disabled="@(!editable)">
+                                <option value="">-- выберите счет организации --</option>
+                            </select>
+                            <span asp-validation-for="Item.OrganizationBankAccountId" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="Item.Amount" class="form-label"></label>
+                            <input asp-for="Item.Amount" class="form-control" disabled="@(!editable)" />
+                            <span asp-validation-for="Item.Amount" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label asp-for="Item.Purpose" class="form-label"></label>
+                            <input asp-for="Item.Purpose" class="form-control" placeholder="Назначение платежа" disabled="@(!editable)" />
+                            <span asp-validation-for="Item.Purpose" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    @if (editable)
+                    {
+                        <div class="mt-4 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                            <a asp-page="Index" class="btn btn-outline-secondary">Отмена</a>
+                        </div>
+                    }
+                </form>
             </div>
         </div>
+
+        <div class="col-lg-4">
+            <div class="section-card mb-4">
+                <h5 class="mb-3">Служебная информация</h5>
+
+                <div class="d-flex flex-column gap-3">
+                    <div>
+                        <div class="text-muted small mb-1">Текущий статус</div>
+                        <div>
+                            <span class="@GetStatusCss(currentStatus)">
+                                @GetStatusText(currentStatus)
+                            </span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="text-muted small mb-1">Маршрут согласования</div>
+                        <div class="fw-semibold">@(string.IsNullOrWhiteSpace(Model.Item.ApprovalRouteName) ? "Не назначен" : Model.Item.ApprovalRouteName)</div>
+                    </div>
+
+                    <div>
+                        <div class="text-muted small mb-1">Bank Reference ID</div>
+                        <div class="fw-semibold">@(string.IsNullOrWhiteSpace(Model.Item.BankReferenceId) ? "-" : Model.Item.BankReferenceId)</div>
+                    </div>
+
+                    <div>
+                        <div class="text-muted small mb-1">Демо-подпись</div>
+                        <div class="fw-semibold">@(string.IsNullOrWhiteSpace(Model.Item.SignatureReference) ? "-" : Model.Item.SignatureReference)</div>
+                        <div class="text-muted small">@(Model.Item.SignedAt?.ToLocalTime().ToString("dd.MM.yyyy HH:mm") ?? "")</div>
+                    </div>
+
+                    <div>
+                        <div class="text-muted small mb-1">Ответ банка</div>
+                        <div class="fw-semibold">@(string.IsNullOrWhiteSpace(Model.Item.BankResponseMessage) ? "-" : Model.Item.BankResponseMessage)</div>
+                    </div>
+
+                    <div>
+                        <div class="text-muted small mb-1">Отправлен в банк</div>
+                        <div class="fw-semibold">@(Model.Item.SentAt?.ToLocalTime().ToString("dd.MM.yyyy HH:mm") ?? "-")</div>
+                    </div>
+
+                    <div>
+                        <div class="text-muted small mb-1">Обработан</div>
+                        <div class="fw-semibold">@(Model.Item.ProcessedAt?.ToLocalTime().ToString("dd.MM.yyyy HH:mm") ?? "-")</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h5 class="mb-3">Подсказки</h5>
+
+                <div class="d-flex flex-column gap-3 text-muted">
+                    <div>• Редактирование доступно только для черновиков и документов на доработке.</div>
+                    <div>• После отправки на согласование изменения будут недоступны.</div>
+                    <div>• После согласования документ можно отправить в банк из списка платежей.</div>
+                    <div>• Статус банка обновляется автоматически фоновой обработкой.</div>
+                </div>
+            </div>
+
+            @if (Model.ApprovalHistory.Count > 0)
+            {
+                <div class="section-card mt-4">
+                    <h5 class="mb-3">История согласования</h5>
+                    <div class="d-flex flex-column gap-3">
+                        @foreach (var history in Model.ApprovalHistory)
+                        {
+                            <div class="border-bottom pb-2">
+                                <div class="fw-semibold">@UiText.ApprovalDecisionText(history.Decision)</div>
+                                <div class="text-muted small">@history.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm") · @history.ApproverName</div>
+                                @if (!string.IsNullOrWhiteSpace(history.Comment))
+                                {
+                                    <div class="mt-1">@history.Comment</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 }
-<div class="card mt-4">
-    <div class="card-header">
-        История согласования
-    </div>
-    <div class="card-body">
-        @if (Model.ApprovalHistory.Count == 0)
-        {
-            <div class="text-muted">Решения по согласованию пока отсутствуют.</div>
-        }
-        else
-        {
-            <table class="table table-sm table-bordered mb-0">
-                <thead>
-                    <tr>
-                        <th>Дата</th>
-                        <th>Согласующий</th>
-                        <th>Решение</th>
-                        <th>Комментарий</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.ApprovalHistory)
-                    {
-                        <tr>
-                            <td>@item.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
-                            <td>@item.ApproverName</td>
-                            <td>@item.Decision</td>
-                            <td>@(string.IsNullOrWhiteSpace(item.Comment) ? "-" : item.Comment)</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-    </div>
-</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const counterparties = @Html.Raw(JsonSerializer.Serialize(
+                    Model.Counterparties.Select(x => new
+                    {
+                            id = x.Id,
+                            inn = x.Inn,
+                            name = x.FullName
+                    })
+            ));
+
+        const searchInput = document.getElementById('counterpartySearch');
+        const results = document.getElementById('counterpartyResults');
+        const hiddenId = document.getElementById('counterpartyId');
+        const preview = document.getElementById('counterpartyPreview');
+        const previewName = document.getElementById('previewName');
+        const previewInn = document.getElementById('previewInn');
+
+        function setSelectedCounterparty(item) {
+            hiddenId.value = item.id;
+            searchInput.value = `${item.name} (${item.inn})`;
+            previewName.textContent = item.name;
+            previewInn.textContent = item.inn;
+            preview.classList.remove('d-none');
+            results.classList.add('d-none');
+        }
+
+        function clearSelectedCounterparty() {
+            hiddenId.value = '';
+            preview.classList.add('d-none');
+            previewName.textContent = '';
+            previewInn.textContent = '';
+        }
+
+        function renderResults(items) {
+            results.innerHTML = '';
+
+            if (!items.length) {
+                results.classList.add('d-none');
+                return;
+            }
+
+            for (const item of items) {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'list-group-item list-group-item-action';
+                button.innerHTML = `<div class="fw-semibold">${item.name}</div><div class="small text-muted">${item.inn}</div>`;
+
+                button.addEventListener('click', () => setSelectedCounterparty(item));
+                results.appendChild(button);
+            }
+
+            results.classList.remove('d-none');
+        }
+
+        function filterCounterparties() {
+            if (!searchInput || !results || searchInput.disabled) return;
+
+            const term = (searchInput.value || '').toLowerCase().trim();
+
+            if (!term) {
+                results.classList.add('d-none');
+                return;
+            }
+
+            const filtered = counterparties
+                .filter(x =>
+                    (x.name || '').toLowerCase().includes(term) ||
+                    (x.inn || '').toLowerCase().includes(term))
+                .slice(0, 20);
+
+            renderResults(filtered);
+        }
+
+        if (searchInput && !searchInput.disabled) {
+            searchInput.addEventListener('input', () => {
+                clearSelectedCounterparty();
+                filterCounterparties();
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            if (results && searchInput && !results.contains(e.target) && e.target !== searchInput) {
+                results.classList.add('d-none');
+            }
+        });
+
+        const initiallySelectedId = hiddenId.value;
+        if (initiallySelectedId) {
+            const selected = counterparties.find(x => x.id === initiallySelectedId);
+            if (selected) {
+                previewName.textContent = selected.name;
+                previewInn.textContent = selected.inn;
+                preview.classList.remove('d-none');
+
+                if (searchInput) {
+                    searchInput.value = `${selected.name} (${selected.inn})`;
+                }
+            }
+        }
+    </script>
 }

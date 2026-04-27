@@ -10,6 +10,7 @@ public class PaymentOrder : BaseEntity
 
     public decimal Amount { get; set; }
     public string Currency { get; set; } = "RUB";
+    public string ExpenseType { get; set; } = string.Empty;
     public string Purpose { get; set; } = string.Empty;
 
     public PaymentStatus Status { get; set; } = PaymentStatus.Draft;
@@ -29,6 +30,9 @@ public class PaymentOrder : BaseEntity
     public string? BankReferenceId { get; set; }
 
     public string? BankResponseMessage { get; set; }
+
+    public DateTime? SignedAt { get; set; }
+    public string? SignatureReference { get; set; }
 
     public DateTime? SentAt { get; set; }
 

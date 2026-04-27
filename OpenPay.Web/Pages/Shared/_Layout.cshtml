@@ -1,116 +1,148 @@
-﻿@using OpenPay.Domain.Enums
+﻿@using Microsoft.AspNetCore.Identity
+@using OpenPay.Infrastructure.Security
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@functions {
+    public string IsActivePage(string page)
+    {
+        var currentPage = ViewContext.RouteData.Values["page"]?.ToString();
+        return string.Equals(currentPage, page, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+    }
+
+    public string IsActiveSection(string sectionPrefix)
+    {
+        var currentPage = ViewContext.RouteData.Values["page"]?.ToString() ?? "";
+        return currentPage.StartsWith(sectionPrefix, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+    }
+}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - OpenPay</title>
-    <script type="importmap"></script>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/OpenPay.Web.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand fw-semibold" asp-area="" asp-page="/Index">OpenPay</a>
+<body class="app-body">
+    <div class="app-shell">
+        <aside class="app-sidebar">
+            <div class="sidebar-brand">
+                <a asp-page="/Index" class="brand-link text-decoration-none">
+                    <div class="brand-logo">OP</div>
+                    <div>
+                        <div class="brand-title">OpenPay</div>
+                        <div class="brand-subtitle">Payment Aggregator</div>
+                    </div>
+                </a>
+            </div>
 
-                <button class="navbar-toggler" type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#mainNavbar"
-                        aria-controls="mainNavbar"
-                        aria-expanded="false"
-                        aria-label="Переключить навигацию">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            <nav class="sidebar-nav mt-4">
+                <a asp-page="/Index" class="nav-link-custom @IsActivePage("/Index")">Главная</a>
 
-                <div id="mainNavbar" class="collapse navbar-collapse justify-content-between">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Главная</a>
-                        </li>
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    @if (User.IsInRole("Accountant") || User.IsInRole("Administrator"))
+                    {
+                        <a asp-page="/Counterparties/Index" class="nav-link-custom @IsActiveSection("/Counterparties")">Контрагенты</a>
+                        <a asp-page="/Accounts/Index" class="nav-link-custom @IsActiveSection("/Accounts")">Счета</a>
+                        <a asp-page="/Payments/Index" class="nav-link-custom @IsActiveSection("/Payments")">Платежи</a>
+                        <a asp-page="/Statements/Index" class="nav-link-custom @IsActiveSection("/Statements")">Выписки</a>
+                        <a asp-page="/Reports/Index" class="nav-link-custom @IsActiveSection("/Reports")">Отчетность</a>
+                        <a asp-page="/Calendar/Index" class="nav-link-custom @IsActiveSection("/Calendar")">Календарь</a>
+                    }
 
-                        @if (User.Identity?.IsAuthenticated ?? false)
-                        {
-                            @if (User.IsInRole(nameof(UserRole.Accountant)) || User.IsInRole(nameof(UserRole.Administrator)))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-page="/Counterparties/Index">Контрагенты</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-page="/Accounts/Index">Счета</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-page="/Payments/Index">Платежи</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-page="/Reports/Index">Отчеты</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-page="/Calendar/Index">Календарь</a>
-                                </li>
-                            }
+                    @if (User.IsInRole("Manager") || User.IsInRole("Administrator"))
+                    {
+                        <a asp-page="/Approvals/Index" class="nav-link-custom @IsActiveSection("/Approvals")">Согласование</a>
+                    }
 
-                            @if (User.IsInRole(nameof(UserRole.Manager)) || User.IsInRole(nameof(UserRole.Administrator)))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-page="/Approvals/Index">Согласование</a>
-                                </li>
-                            }
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <div class="nav-section-title mt-4">Администрирование</div>
+                        <a asp-page="/Admin/Index" class="nav-link-custom @IsActivePage("/Admin/Index")">Аудит</a>
+                        <a asp-page="/Admin/ApprovalRoutes/Index" class="nav-link-custom @IsActiveSection("/Admin/ApprovalRoutes")">Маршруты</a>
+                        <a asp-page="/Admin/BankConnections/Index" class="nav-link-custom @IsActiveSection("/Admin/BankConnections")">Банки</a>
+                        <a asp-page="/Admin/Users/Index" class="nav-link-custom @IsActiveSection("/Admin/Users")">Пользователи</a>
+                    }
 
-                            @if (User.IsInRole(nameof(UserRole.Administrator)))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-page="/Admin/Index">Аудит</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-page="/Admin/Users/Index">Пользователи</a>
-                                </li>
-                            }
+                    @if (User.IsInRole("PlatformAdmin"))
+                    {
+                        <div class="nav-section-title mt-4">Платформа</div>
+                        <a asp-page="/Admin/Organizations/Index" class="nav-link-custom @IsActiveSection("/Admin/Organizations")">Организации</a>
+                    }
+                }
+            </nav>
+        </aside>
 
-                            @if (User.IsInRole(nameof(UserRole.PlatformAdmin)))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-page="/Admin/Organizations/Index">Организации</a>
-                                </li>
-                            }
-                        }
-                    </ul>
-
-                    <partial name="_LoginPartial" />
+        <div class="app-main">
+            <header class="app-header">
+                <div>
+                    <h1 class="page-title mb-0">@ViewData["Title"]</h1>
                 </div>
-            </div>
-        </nav>
-    </header>
 
-    <div class="container">
-        @if (TempData["SuccessMessage"] is string successMessage)
-        {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                @successMessage
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
-            </div>
-        }
+                <div class="header-actions">
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <div class="user-box">
+                            <div class="user-avatar">
+                                @(User.Identity?.Name?.Substring(0, 1).ToUpper() ?? "U")
+                            </div>
+                            <div class="user-meta">
+                                <div class="user-name">@User.Identity?.Name</div>
+                                <div class="user-role">
+                                    @if (User.IsInRole("PlatformAdmin"))
+                                    {
+                                        <span>Платформенный администратор</span>
+                                    }
+                                    else if (User.IsInRole("Administrator"))
+                                    {
+                                        <span>Администратор</span>
+                                    }
+                                    else if (User.IsInRole("Manager"))
+                                    {
+                                        <span>Руководитель</span>
+                                    }
+                                    else if (User.IsInRole("Accountant"))
+                                    {
+                                        <span>Бухгалтер</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
 
-        @if (TempData["ErrorMessage"] is string errorMessage)
-        {
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                @errorMessage
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
-            </div>
-        }
+                        <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="mb-0">
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">Выход</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary btn-sm">Вход</a>
+                    }
+                </div>
+            </header>
 
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+            <main class="app-content">
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success shadow-sm border-0">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
 
-    <footer class="border-top footer text-muted mt-4">
-        <div class="container">
-            &copy; 2026 - OpenPay
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger shadow-sm border-0">
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
+
+                @RenderBody()
+            </main>
         </div>
-    </footer>
+    </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

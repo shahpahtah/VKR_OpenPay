@@ -69,7 +69,8 @@ public class OrganizationManagementService : IOrganizationManagementService
             FullName = dto.AdminFullName.Trim(),
             EmailConfirmed = true,
             Role = UserRole.Administrator,
-            OrganizationId = organization.Id
+            OrganizationId = organization.Id,
+            IsActive = true
         };
 
         var createResult = await _userManager.CreateAsync(user, dto.AdminPassword);
@@ -89,5 +90,33 @@ public class OrganizationManagementService : IOrganizationManagementService
         }
 
         return organization.Id;
+    }
+
+    public async Task DeactivateAsync(Guid id)
+    {
+        var organization = await _dbContext.Organizations.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (organization == null)
+            throw new InvalidOperationException("Организация не найдена.");
+
+        if (!organization.IsActive)
+            return;
+
+        organization.IsActive = false;
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task ActivateAsync(Guid id)
+    {
+        var organization = await _dbContext.Organizations.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (organization == null)
+            throw new InvalidOperationException("Организация не найдена.");
+
+        if (organization.IsActive)
+            return;
+
+        organization.IsActive = true;
+        await _dbContext.SaveChangesAsync();
     }
 }

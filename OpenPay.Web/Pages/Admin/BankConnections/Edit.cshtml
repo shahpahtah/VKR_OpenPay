@@ -1,0 +1,58 @@
+@page "{id:guid}"
+@model OpenPay.Web.Pages.Admin.BankConnections.EditModel
+@{
+    ViewData["Title"] = "Редактирование подключения";
+}
+
+<div class="page-actions">
+    <div>
+        <h2 class="mb-1">Редактирование банковского подключения</h2>
+        <div class="text-muted">Оставьте поля токенов пустыми, чтобы сохранить текущие значения</div>
+    </div>
+    <a asp-page="Index" class="btn btn-outline-secondary">Назад</a>
+</div>
+
+<div class="section-card">
+    <form method="post">
+        <input asp-for="Item.Id" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label asp-for="Item.BankCode" class="form-label"></label>
+                <select asp-for="Item.BankCode" asp-items="Model.BankOptions" class="form-select"></select>
+                <span asp-validation-for="Item.BankCode" class="text-danger"></span>
+            </div>
+            <div class="col-md-8">
+                <label asp-for="Item.DisplayName" class="form-label"></label>
+                <input asp-for="Item.DisplayName" class="form-control" />
+                <span asp-validation-for="Item.DisplayName" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Item.AccessToken" class="form-label"></label>
+                <input asp-for="Item.AccessToken" class="form-control" placeholder="@(Model.Item.HasAccessToken ? "Токен уже сохранен" : "Введите токен")" />
+                <span asp-validation-for="Item.AccessToken" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Item.RefreshToken" class="form-label"></label>
+                <input asp-for="Item.RefreshToken" class="form-control" placeholder="@(Model.Item.HasRefreshToken ? "Токен уже сохранен" : "Введите токен")" />
+                <span asp-validation-for="Item.RefreshToken" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <div class="form-check">
+                    <input asp-for="Item.IsActive" class="form-check-input" />
+                    <label asp-for="Item.IsActive" class="form-check-label"></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a asp-page="Index" class="btn btn-outline-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,147 @@
+@page
+@model OpenPay.Web.Pages.Statements.IndexModel
+@{
+    ViewData["Title"] = "Выписки";
+}
+
+<div class="page-actions">
+    <div>
+        <h2 class="mb-1">Банковские выписки и сверка</h2>
+        <div class="text-muted">Загрузка демо-выписки и сопоставление операций с платежами OpenPay</div>
+    </div>
+</div>
+
+<div class="section-card mb-4">
+    <form method="post" asp-page-handler="Load" class="row g-3 align-items-end">
+        <div asp-validation-summary="ModelOnly" class="text-danger col-12"></div>
+        <div class="col-lg-5">
+            <label asp-for="OrganizationBankAccountId" class="form-label">Счет организации</label>
+            <select asp-for="OrganizationBankAccountId" asp-items="Model.AccountOptions" class="form-select">
+                <option value="">-- выберите счет --</option>
+            </select>
+        </div>
+        <div class="col-lg-2">
+            <label asp-for="DateFrom" class="form-label">С даты</label>
+            <input asp-for="DateFrom" type="date" class="form-control" />
+        </div>
+        <div class="col-lg-2">
+            <label asp-for="DateTo" class="form-label">По дату</label>
+            <input asp-for="DateTo" type="date" class="form-control" />
+        </div>
+        <div class="col-lg-3">
+            <button type="submit" class="btn btn-primary w-100">Загрузить и сверить</button>
+        </div>
+    </form>
+</div>
+
+@if (Model.Result != null)
+{
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="kpi-card">
+                <div class="kpi-label">Операций</div>
+                <div class="kpi-value">@Model.Result.TotalOperations</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="kpi-card">
+                <div class="kpi-label">Сопоставлено</div>
+                <div class="kpi-value">@Model.Result.MatchedOperations</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="kpi-card">
+                <div class="kpi-label">Не найдено</div>
+                <div class="kpi-value">@Model.Result.UnmatchedOperations</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-card mb-4">
+        <h5 class="mb-3">Результат сверки</h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Контрагент</th>
+                        <th>Сумма</th>
+                        <th>Reference</th>
+                        <th>Результат</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Result.Items)
+                    {
+                        <tr>
+                            <td>@item.OperationDate.ToString("dd.MM.yyyy")</td>
+                            <td>
+                                <div class="fw-semibold">@item.CounterpartyName</div>
+                                <div class="text-muted small">@item.Purpose</div>
+                            </td>
+                            <td class="fw-semibold">@item.Amount.ToString("N2") @item.Currency</td>
+                            <td>@(item.BankReferenceId ?? "-")</td>
+                            <td>
+                                <span class="@(item.MatchedPaymentOrderId.HasValue ? "badge-soft badge-executed" : "badge-soft badge-pending")">
+                                    @item.Message
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<div class="section-card">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Загруженные выписки</h5>
+        <span class="text-muted small">Всего: @Model.Statements.Count</span>
+    </div>
+
+    @if (Model.Statements.Count == 0)
+    {
+        <div class="empty-state">
+            <h5 class="mb-2">Выписки пока не загружены</h5>
+            <div>Выберите счет и период выше, чтобы создать демонстрационную выписку.</div>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Загружена</th>
+                        <th>Счет</th>
+                        <th>Период</th>
+                        <th>Операций</th>
+                        <th>Сверка</th>
+                        <th style="width: 150px;">Действие</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Statements)
+                    {
+                        <tr>
+                            <td>@item.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                            <td>@item.AccountDisplay</td>
+                            <td>@item.PeriodFrom.ToString("dd.MM.yyyy") - @item.PeriodTo.ToString("dd.MM.yyyy")</td>
+                            <td>@item.TotalOperations</td>
+                            <td>
+                                <span class="badge-soft badge-executed">@item.MatchedOperations найдено</span>
+                                <span class="badge-soft badge-pending">@item.UnmatchedOperations не найдено</span>
+                            </td>
+                            <td>
+                                <form method="post" asp-page-handler="Reconcile" asp-route-id="@item.Id" class="m-0">
+                                    <button type="submit" class="btn btn-sm btn-outline-primary">Сверить</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

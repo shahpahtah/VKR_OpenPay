@@ -28,6 +28,8 @@ public class BankStatusProcessor : IBankStatusProcessor
     public async Task ProcessPendingStatusesAsync(CancellationToken cancellationToken)
     {
         var payments = await _dbContext.PaymentOrders
+            .Include(x => x.OrganizationBankAccount)
+            .ThenInclude(x => x!.BankConnection)
             .Where(x => x.Status == PaymentStatus.Sent)
             .OrderBy(x => x.SentAt)
             .ToListAsync(cancellationToken);

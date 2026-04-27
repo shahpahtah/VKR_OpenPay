@@ -12,5 +12,7 @@ public class PaymentOrderListItemDto
 
     public decimal Amount { get; set; }
     public string Currency { get; set; } = string.Empty;
+    public string ExpenseType { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
+    public string? ApprovalRouteName { get; set; }
 }

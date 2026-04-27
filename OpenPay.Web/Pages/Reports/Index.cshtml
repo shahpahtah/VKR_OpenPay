@@ -4,148 +4,201 @@
     ViewData["Title"] = "Отчетность";
 }
 
-<h2 class="mb-3">Отчетность по платежам</h2>
+<div class="page-actions">
+    <div>
+        <h2 class="mb-1">Отчетность по платежам</h2>
+        <div class="text-muted">Аналитика по документам, статусам и суммам за выбранный период</div>
+    </div>
+</div>
 
-<form method="get" class="row g-3 mb-4">
-    <div class="col-md-3">
-        <label asp-for="DateFrom" class="form-label">Дата платежа с</label>
-        
-        <input asp-for="DateFrom" type="date" class="form-control" />
-    </div>
-    <div class="col-md-3">
-        <label asp-for="DateTo" class="form-label">Дата платежа по</label>
-        <input asp-for="DateTo" type="date" class="form-control" />
-    </div>
-    <div class="col-md-3 d-flex align-items-end">
-        <button type="submit" class="btn btn-primary">Сформировать</button>
-    </div>
-</form>
-<div class="mb-4 d-flex gap-2">
-    <form method="post" asp-page-handler="ExportCsv">
-        <input type="hidden" name="DateFrom" value="@(Model.DateFrom?.ToString("yyyy-MM-dd"))" />
-        <input type="hidden" name="DateTo" value="@(Model.DateTo?.ToString("yyyy-MM-dd"))" />
-        <button type="submit" class="btn btn-outline-secondary">Экспорт CSV</button>
+<div class="section-card mb-4">
+    <form method="get" class="row g-3 align-items-end">
+        <div class="col-lg-3">
+            <label asp-for="DateFrom" class="form-label">Дата платежа с</label>
+            <input asp-for="DateFrom" type="date" class="form-control" />
+        </div>
+
+        <div class="col-lg-3">
+            <label asp-for="DateTo" class="form-label">Дата платежа по</label>
+            <input asp-for="DateTo" type="date" class="form-control" />
+        </div>
+
+        <div class="col-lg-6 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Сформировать</button>
+            <a asp-page="Index" class="btn btn-outline-secondary">Сбросить</a>
+        </div>
     </form>
 
-    <form method="post" asp-page-handler="ExportExcel">
-        <input type="hidden" name="DateFrom" value="@(Model.DateFrom?.ToString("yyyy-MM-dd"))" />
-        <input type="hidden" name="DateTo" value="@(Model.DateTo?.ToString("yyyy-MM-dd"))" />
-        <button type="submit" class="btn btn-outline-success">Экспорт Excel</button>
-    </form>
+    <hr class="my-4" />
+
+    <div class="d-flex gap-2 flex-wrap">
+        <form method="post" asp-page-handler="ExportCsv" class="m-0">
+            <input type="hidden" name="DateFrom" value="@(Model.DateFrom?.ToString("yyyy-MM-dd"))" />
+            <input type="hidden" name="DateTo" value="@(Model.DateTo?.ToString("yyyy-MM-dd"))" />
+            <button type="submit" class="btn btn-outline-secondary">Экспорт CSV</button>
+        </form>
+
+        <form method="post" asp-page-handler="ExportExcel" class="m-0">
+            <input type="hidden" name="DateFrom" value="@(Model.DateFrom?.ToString("yyyy-MM-dd"))" />
+            <input type="hidden" name="DateTo" value="@(Model.DateTo?.ToString("yyyy-MM-dd"))" />
+            <button type="submit" class="btn btn-outline-success">Экспорт Excel</button>
+        </form>
+    </div>
 </div>
 
 <div class="row g-3 mb-4">
     <div class="col-md-3">
-        <div class="card border-primary">
-            <div class="card-body">
-                <h6 class="card-title">Всего платежей</h6>
-                <div class="fs-4">@Model.Report.TotalPaymentsCount</div>
-                <div class="text-muted">@Model.Report.TotalPaymentsAmount.ToString("N2")</div>
-            </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Всего платежей</div>
+            <div class="kpi-value">@Model.Report.TotalPaymentsCount</div>
+            <div class="text-muted mt-2">@Model.Report.TotalPaymentsAmount.ToString("N2")</div>
         </div>
     </div>
 
     <div class="col-md-3">
-        <div class="card border-success">
-            <div class="card-body">
-                <h6 class="card-title">Исполнено</h6>
-                <div class="fs-4">@Model.Report.ExecutedPaymentsCount</div>
-                <div class="text-muted">@Model.Report.ExecutedPaymentsAmount.ToString("N2")</div>
-            </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Исполнено</div>
+            <div class="kpi-value">@Model.Report.ExecutedPaymentsCount</div>
+            <div class="text-muted mt-2">@Model.Report.ExecutedPaymentsAmount.ToString("N2")</div>
         </div>
     </div>
 
     <div class="col-md-3">
-        <div class="card border-warning">
-            <div class="card-body">
-                <h6 class="card-title">На согласовании</h6>
-                <div class="fs-4">@Model.Report.PendingApprovalCount</div>
-                <div class="text-muted">@Model.Report.PendingApprovalAmount.ToString("N2")</div>
-            </div>
+        <div class="kpi-card">
+            <div class="kpi-label">На согласовании</div>
+            <div class="kpi-value">@Model.Report.PendingApprovalCount</div>
+            <div class="text-muted mt-2">@Model.Report.PendingApprovalAmount.ToString("N2")</div>
         </div>
     </div>
 
     <div class="col-md-3">
-        <div class="card border-danger">
-            <div class="card-body">
-                <h6 class="card-title">Ошибки</h6>
-                <div class="fs-4">@Model.Report.ErrorPaymentsCount</div>
-                <div class="text-muted">@Model.Report.ErrorPaymentsAmount.ToString("N2")</div>
-            </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Ошибки</div>
+            <div class="kpi-value">@Model.Report.ErrorPaymentsCount</div>
+            <div class="text-muted mt-2">@Model.Report.ErrorPaymentsAmount.ToString("N2")</div>
         </div>
     </div>
 </div>
 
-<div class="card mb-4">
-    <div class="card-header">
-        Сводка по статусам
-    </div>
-    <div class="card-body">
-        @if (Model.Report.StatusSummary.Count == 0)
-        {
-            <div class="text-muted">Данные отсутствуют.</div>
-        }
-        else
-        {
-            <table class="table table-sm table-bordered mb-0">
-                <thead>
-                    <tr>
-                        <th>Статус</th>
-                        <th>Количество</th>
-                        <th>Сумма</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Report.StatusSummary)
-                    {
-                        <tr>
-                            <td>@item.Status</td>
-                            <td>@item.Count</td>
-                            <td>@item.TotalAmount.ToString("N2")</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-    </div>
-</div>
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="section-card h-100">
+            <h5 class="mb-3">Сводка по статусам</h5>
 
-<div class="card">
-    <div class="card-header">
-        Платежи за выбранный период
+            @if (Model.Report.StatusSummary.Count == 0)
+            {
+                <div class="empty-state">
+                    <div>Данные отсутствуют.</div>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Статус</th>
+                                <th>Кол-во</th>
+                                <th>Сумма</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Report.StatusSummary)
+                            {
+                                <tr>
+                                    <td>@item.Status</td>
+                                    <td>@item.Count</td>
+                                    <td>@item.TotalAmount.ToString("N2")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
     </div>
-    <div class="card-body">
-        @if (Model.Report.Items.Count == 0)
-        {
-            <div class="text-muted">Платежи не найдены.</div>
-        }
-        else
-        {
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Номер</th>
-                        <th>Дата создания</th>
-                        <th>Дата платежа</th>
-                        <th>Контрагент</th>
-                        <th>Сумма</th>
-                        <th>Статус</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Report.Items)
-                    {
-                        <tr>
-                            <td>@item.DocumentNumber</td>
-                            <td>@item.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
-                            <td>@(item.PaymentDate?.ToString("dd.MM.yyyy") ?? "-")</td>
-                            <td>@item.CounterpartyName</td>
-                            <td>@item.Amount.ToString("N2") @item.Currency</td>
-                            <td>@item.Status</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
+
+    <div class="col-lg-8">
+        <div class="section-card h-100">
+            <h5 class="mb-3">Сводка по контрагентам</h5>
+
+            @if (Model.Report.CounterpartySummary.Count == 0)
+            {
+                <div class="empty-state">
+                    <div>Данные отсутствуют.</div>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Контрагент</th>
+                                <th>Кол-во</th>
+                                <th>Сумма</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Report.CounterpartySummary)
+                            {
+                                <tr>
+                                    <td>@item.CounterpartyName</td>
+                                    <td>@item.Count</td>
+                                    <td class="fw-semibold">@item.TotalAmount.ToString("N2")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="section-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Платежи за выбранный период</h5>
+                <span class="text-muted small">Всего: @Model.Report.Items.Count</span>
+            </div>
+
+            @if (Model.Report.Items.Count == 0)
+            {
+                <div class="empty-state">
+                    <h6 class="mb-2">Платежи не найдены</h6>
+                    <div>Измените период или создайте новые документы.</div>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Номер</th>
+                                <th>Дата создания</th>
+                                <th>Дата платежа</th>
+                                <th>Контрагент</th>
+                                <th>Сумма</th>
+                                <th>Статус</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Report.Items)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@item.DocumentNumber</td>
+                                    <td>@item.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                                    <td>@(item.PaymentDate?.ToString("dd.MM.yyyy") ?? "-")</td>
+                                    <td>@item.CounterpartyName</td>
+                                    <td class="fw-semibold">@item.Amount.ToString("N2") @item.Currency</td>
+                                    <td>@item.Status</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
     </div>
 </div>

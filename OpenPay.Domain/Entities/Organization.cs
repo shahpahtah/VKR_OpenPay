@@ -9,6 +9,7 @@ public class Organization : BaseEntity
 
     public ICollection<Counterparty> Counterparties { get; set; } = new List<Counterparty>();
     public ICollection<OrganizationBankAccount> BankAccounts { get; set; } = new List<OrganizationBankAccount>();
+    public ICollection<BankConnection> BankConnections { get; set; } = new List<BankConnection>();
     public ICollection<PaymentOrder> PaymentOrders { get; set; } = new List<PaymentOrder>();
     public ICollection<ApprovalRoute> ApprovalRoutes { get; set; } = new List<ApprovalRoute>();
     public ICollection<AuditLogEntry> AuditLogEntries { get; set; } = new List<AuditLogEntry>();

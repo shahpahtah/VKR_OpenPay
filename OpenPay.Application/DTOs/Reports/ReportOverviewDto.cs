@@ -1,4 +1,4 @@
-﻿using OpenPay.Application.DTOs.Reports;
+namespace OpenPay.Application.DTOs.Reports;
 
 public class ReportOverviewDto
 {
@@ -18,5 +18,6 @@ public class ReportOverviewDto
     public decimal ErrorPaymentsAmount { get; set; }
 
     public IReadOnlyList<StatusSummaryDto> StatusSummary { get; set; } = [];
+    public IReadOnlyList<CounterpartySummaryDto> CounterpartySummary { get; set; } = [];
     public IReadOnlyList<PaymentReportItemDto> Items { get; set; } = [];
 }

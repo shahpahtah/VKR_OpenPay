@@ -30,6 +30,9 @@ public class UpsertOrganizationBankAccountDto
     [Display(Name = "Ответственное подразделение")]
     public string ResponsibleUnit { get; set; } = string.Empty;
 
+    [Display(Name = "Банковское подключение")]
+    public Guid? BankConnectionId { get; set; }
+
     [Display(Name = "Активен")]
     public bool IsActive { get; set; } = true;
 }

@@ -1,0 +1,123 @@
+@page
+@model OpenPay.Web.Pages.Payments.ImportModel
+@{
+    ViewData["Title"] = "Импорт платежей";
+}
+
+<div class="page-actions">
+    <div>
+        <h2 class="mb-1">Импорт платежей из CSV</h2>
+        <div class="text-muted">Массовая загрузка платежных поручений в статусе черновика</div>
+    </div>
+
+    <div>
+        <a asp-page="Index" class="btn btn-outline-secondary">Назад к списку</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="section-card">
+            <form method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="UploadFile" class="form-label">CSV-файл</label>
+                    <input asp-for="UploadFile" type="file" class="form-control" accept=".csv" />
+                </div>
+
+                <div class="small text-muted mb-3">
+                    Ожидаемые колонки:
+                    <strong>DocumentNumber</strong> (необязательно),
+                    <strong>PaymentDate</strong>,
+                    <strong>CounterpartyInn</strong>,
+                    <strong>OrganizationAccountNumber</strong>,
+                    <strong>Amount</strong>,
+                    <strong>Currency</strong>,
+                    <strong>ExpenseType</strong> (необязательно),
+                    <strong>Purpose</strong>.
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Импортировать</button>
+                    <a asp-page="Index" class="btn btn-outline-secondary">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="section-card h-100">
+            <h5 class="mb-3">Пример CSV</h5>
+
+            <pre class="small mb-0">DocumentNumber;PaymentDate;CounterpartyInn;OrganizationAccountNumber;Amount;Currency;ExpenseType;Purpose
+PAY-001;15.05.2026;7707083893;40702810000000000007;12500,50;RUB;Поставщики;Оплата поставщику по договору №15
+;16.05.2026;500100732259;40702810000000000007;8400;RUB;Авансы;Авансовый платеж</pre>
+        </div>
+    </div>
+</div>
+
+@if (Model.Result != null)
+{
+    <div class="section-card mt-4">
+        <h5 class="mb-3">Результат импорта</h5>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="kpi-card">
+                    <div class="kpi-label">Всего строк</div>
+                    <div class="kpi-value">@Model.Result.TotalRows</div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="kpi-card">
+                    <div class="kpi-label">Успешно импортировано</div>
+                    <div class="kpi-value">@Model.Result.ImportedRows</div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="kpi-card">
+                    <div class="kpi-label">С ошибками</div>
+                    <div class="kpi-value">@Model.Result.ErrorRows</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Строка</th>
+                        <th>Номер</th>
+                        <th>INN контрагента</th>
+                        <th>Сумма</th>
+                        <th>Результат</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Result.Items)
+                    {
+                        <tr>
+                            <td>@item.RowNumber</td>
+                            <td>@item.DocumentNumber</td>
+                            <td>@item.CounterpartyInn</td>
+                            <td>@item.AmountText</td>
+                            <td>
+                                @if (item.IsImported)
+                                {
+                                    <span class="badge-soft badge-executed">@item.Message</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-soft badge-error">@item.Message</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
