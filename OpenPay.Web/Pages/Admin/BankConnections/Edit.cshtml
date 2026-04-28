@@ -36,6 +36,7 @@
             <div class="col-md-6">
                 <label asp-for="Item.RefreshToken" class="form-label"></label>
                 <input asp-for="Item.RefreshToken" class="form-control" placeholder="@(Model.Item.HasRefreshToken ? "Токен уже сохранен" : "Введите токен")" />
+                <div class="form-text">Для Т-Банк Sandbox refresh token не требуется.</div>
                 <span asp-validation-for="Item.RefreshToken" class="text-danger"></span>
             </div>
             <div class="col-12">

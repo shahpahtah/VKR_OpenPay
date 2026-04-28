@@ -30,6 +30,7 @@ public class BankProcessingService : IBankProcessingService
         var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
 
         var payment = await _dbContext.PaymentOrders
+            .Include(x => x.Counterparty)
             .Include(x => x.OrganizationBankAccount)
             .ThenInclude(x => x!.BankConnection)
             .FirstOrDefaultAsync(x => x.Id == paymentOrderId && x.OrganizationId == organizationId);
@@ -96,6 +97,7 @@ public class BankProcessingService : IBankProcessingService
         var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
 
         var payment = await _dbContext.PaymentOrders
+            .Include(x => x.Counterparty)
             .Include(x => x.OrganizationBankAccount)
             .ThenInclude(x => x!.BankConnection)
             .FirstOrDefaultAsync(x => x.Id == paymentOrderId && x.OrganizationId == organizationId);

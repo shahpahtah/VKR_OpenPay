@@ -1,3 +1,16 @@
 .vs/
 bin/
 obj/
+.dotnet-home/
+*.log
+OpenPay.Web/DataProtection-Keys/
+OpenPay.Web/DatabaseBackups/
+OpenPay.Web/*.db
+OpenPay.Web/*.db-shm
+OpenPay.Web/*.db-wal
+OpenPay.Web/*.sqbpro
+
+testCounterparties.csv
+testCounterparties.txt
+testpayments.csv
+testpayments.txt

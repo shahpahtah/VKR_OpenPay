@@ -13,17 +13,20 @@ public class IndexModel : PageModel
     private readonly IPaymentOrderService _paymentOrderService;
     private readonly IApprovalService _approvalService;
     private readonly IOrganizationManagementService _organizationManagementService;
+    private readonly ICurrentOrganizationService _currentOrganizationService;
 
     public IndexModel(
         IReportService reportService,
         IPaymentOrderService paymentOrderService,
         IApprovalService approvalService,
-        IOrganizationManagementService organizationManagementService)
+        IOrganizationManagementService organizationManagementService,
+        ICurrentOrganizationService currentOrganizationService)
     {
         _reportService = reportService;
         _paymentOrderService = paymentOrderService;
         _approvalService = approvalService;
         _organizationManagementService = organizationManagementService;
+        _currentOrganizationService = currentOrganizationService;
     }
 
     public bool IsAuthenticated => User.Identity?.IsAuthenticated ?? false;
@@ -39,6 +42,8 @@ public class IndexModel : PageModel
     public IReadOnlyList<PaymentOrderListItemDto> RecentPayments { get; private set; } = [];
     public IReadOnlyList<PendingApprovalListItemDto> PendingApprovals { get; private set; } = [];
     public int OrganizationCount { get; private set; }
+    public string? CurrentOrganizationName { get; private set; }
+    public string? CurrentOrganizationInn { get; private set; }
 
     public async Task OnGetAsync()
     {
@@ -49,6 +54,13 @@ public class IndexModel : PageModel
         IsManager = User.IsInRole(nameof(UserRole.Manager));
         IsAdministrator = User.IsInRole(nameof(UserRole.Administrator));
         IsPlatformAdmin = User.IsInRole(nameof(UserRole.PlatformAdmin));
+
+        if (!IsPlatformAdmin)
+        {
+            var organization = await _currentOrganizationService.GetCurrentOrganizationInfoAsync();
+            CurrentOrganizationName = organization?.Name;
+            CurrentOrganizationInn = organization?.Inn;
+        }
 
         if (CanSeeOperations)
         {

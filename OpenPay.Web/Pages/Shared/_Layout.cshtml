@@ -1,7 +1,9 @@
-﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity
+@using OpenPay.Application.Interfaces
 @using OpenPay.Infrastructure.Security
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject ICurrentOrganizationService CurrentOrganizationService
 @functions {
     public string IsActivePage(string page)
     {
@@ -14,6 +16,13 @@
         var currentPage = ViewContext.RouteData.Values["page"]?.ToString() ?? "";
         return currentPage.StartsWith(sectionPrefix, StringComparison.OrdinalIgnoreCase) ? "active" : "";
     }
+}
+@{
+    var isSignedIn = SignInManager.IsSignedIn(User);
+    var isPlatformAdmin = User.IsInRole("PlatformAdmin");
+    var currentOrganization = isSignedIn && !isPlatformAdmin
+        ? await CurrentOrganizationService.GetCurrentOrganizationInfoAsync()
+        : null;
 }
 <!DOCTYPE html>
 <html lang="ru">
@@ -84,7 +93,7 @@
                 </div>
 
                 <div class="header-actions">
-                    @if (SignInManager.IsSignedIn(User))
+                    @if (isSignedIn)
                     {
                         <div class="user-box">
                             <div class="user-avatar">
@@ -93,7 +102,7 @@
                             <div class="user-meta">
                                 <div class="user-name">@User.Identity?.Name</div>
                                 <div class="user-role">
-                                    @if (User.IsInRole("PlatformAdmin"))
+                                    @if (isPlatformAdmin)
                                     {
                                         <span>Платформенный администратор</span>
                                     }
@@ -108,6 +117,20 @@
                                     else if (User.IsInRole("Accountant"))
                                     {
                                         <span>Бухгалтер</span>
+                                    }
+                                </div>
+                                <div class="user-organization">
+                                    @if (isPlatformAdmin)
+                                    {
+                                        <span>Режим платформы</span>
+                                    }
+                                    else if (currentOrganization != null)
+                                    {
+                                        <span>@currentOrganization.Name</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Организация не определена</span>
                                     }
                                 </div>
                             </div>

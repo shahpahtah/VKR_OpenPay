@@ -1,7 +1,8 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using OpenPay.Application.Common;
+using OpenPay.Application.DTOs.Organizations;
 using OpenPay.Application.Interfaces;
 using OpenPay.Infrastructure.Persistence;
 
@@ -32,6 +33,27 @@ public class CurrentOrganizationService : ICurrentOrganizationService
             .AsNoTracking()
             .Where(x => x.Id == userId)
             .Select(x => x.OrganizationId)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<CurrentOrganizationDto?> GetCurrentOrganizationInfoAsync()
+    {
+        var userId = _httpContextAccessor.HttpContext?.User?
+            .FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrWhiteSpace(userId))
+            return null;
+
+        return await _dbContext.Users
+            .AsNoTracking()
+            .Where(x => x.Id == userId && x.Organization != null)
+            .Select(x => new CurrentOrganizationDto
+            {
+                Id = x.Organization!.Id,
+                Name = x.Organization.Name,
+                Inn = x.Organization.Inn,
+                IsActive = x.Organization.IsActive
+            })
             .FirstOrDefaultAsync();
     }
 

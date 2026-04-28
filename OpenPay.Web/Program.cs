@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 using OpenPay.Application.Interfaces;
 using OpenPay.Infrastructure.Banking;
 using OpenPay.Infrastructure.Persistence;
@@ -8,6 +9,9 @@ using OpenPay.Infrastructure.Security;
 using OpenPay.Infrastructure.Services;
 using OpenPay.Web.Middleware;
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                       ?? "Data Source=openpay-dev.db";
@@ -41,6 +45,7 @@ builder.Services.AddScoped<IApprovalRouteService, ApprovalRouteService>();
 builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 builder.Services.AddScoped<IBankProcessingService, BankProcessingService>();
 builder.Services.AddScoped<IBankAdapter, TBankDemoAdapter>();
+builder.Services.AddScoped<IBankAdapter, TBankSandboxAdapter>();
 builder.Services.AddScoped<IBankAdapter, SberDemoAdapter>();
 builder.Services.AddScoped<IBankAdapterRegistry, BankAdapterRegistry>();
 builder.Services.AddScoped<IBankGatewayService, BankGatewayService>();
@@ -56,11 +61,26 @@ builder.Services.AddHostedService<BankStatusBackgroundService>();
 builder.Services.AddScoped<IUserManagementService, UserManagementService>();
 builder.Services.AddScoped<IOrganizationManagementService, OrganizationManagementService>();
 builder.Services.AddScoped<IReportExportService, ReportExportService>();
+builder.Services.AddHttpClient("TBankSandbox", client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(20);
+    client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+    client.DefaultRequestVersion = HttpVersion.Version11;
+    client.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrLower;
+})
+.ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+{
+    UseProxy = false,
+    PooledConnectionLifetime = TimeSpan.FromMinutes(2)
+});
 
 builder.Services.AddRazorPages();
-builder.Services.AddDataProtection();
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(
+        Path.Combine(builder.Environment.ContentRootPath, "DataProtection-Keys")));
 
 var app = builder.Build();
+var seedOnly = args.Contains("--seed-demo", StringComparer.OrdinalIgnoreCase);
 
 if (!app.Environment.IsDevelopment())
 {
@@ -90,6 +110,9 @@ var tokenProtectionService = services.GetRequiredService<ITokenProtectionService
 await dbContext.Database.MigrateAsync();
 await IdentitySeeder.SeedAsync(userManager, roleManager, dbContext, tokenProtectionService);
 }
+
+if (seedOnly)
+    return;
 
 app.MapRazorPages();
 

@@ -104,7 +104,7 @@ public class BankConnectionService : IBankConnectionService
             BankCode = adapter.BankCode,
             DisplayName = dto.DisplayName.Trim(),
             ProtectedAccessToken = _tokenProtectionService.Protect(dto.AccessToken ?? string.Empty),
-            ProtectedRefreshToken = _tokenProtectionService.Protect(dto.RefreshToken ?? string.Empty),
+        ProtectedRefreshToken = _tokenProtectionService.Protect(dto.RefreshToken ?? string.Empty),
             IsActive = dto.IsActive
         };
 
@@ -203,7 +203,6 @@ public class BankConnectionService : IBankConnectionService
         if (requireTokens && string.IsNullOrWhiteSpace(dto.AccessToken))
             throw new InvalidOperationException("Access token обязателен для нового подключения.");
 
-        if (requireTokens && string.IsNullOrWhiteSpace(dto.RefreshToken))
-            throw new InvalidOperationException("Refresh token обязателен для нового подключения.");
+        // T-Банк Sandbox работает с коротким Bearer-токеном без refresh token.
     }
 }

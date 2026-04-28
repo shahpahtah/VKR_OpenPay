@@ -34,10 +34,7 @@ public class ApprovalRouteService : IApprovalRouteService
         if (!includeInactive)
             query = query.Where(x => x.IsActive);
 
-        return await query
-            .OrderByDescending(x => x.IsActive)
-            .ThenBy(x => x.MinAmount ?? 0)
-            .ThenBy(x => x.Name)
+        var routes = await query
             .Select(x => new ApprovalRouteListItemDto
             {
                 Id = x.Id,
@@ -50,6 +47,12 @@ public class ApprovalRouteService : IApprovalRouteService
                 IsActive = x.IsActive
             })
             .ToListAsync();
+
+        return routes
+            .OrderByDescending(x => x.IsActive)
+            .ThenBy(x => x.MinAmount ?? 0m)
+            .ThenBy(x => x.Name)
+            .ToList();
     }
 
     public async Task<UpsertApprovalRouteDto?> GetByIdAsync(Guid id)

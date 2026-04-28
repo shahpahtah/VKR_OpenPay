@@ -1,28 +1,73 @@
 # OpenPay
 
-OpenPay is a Razor Pages prototype of a corporate payment aggregator for a graduation project. It demonstrates counterparties, organization accounts, payment orders, approval, demo OpenBanking adapters, bank statements, reconciliation, reports and audit.
+OpenPay - прототип корпоративного платежного агрегатора на Razor Pages для ВКР. Система демонстрирует работу с организациями, пользователями, ролями, контрагентами, счетами, платежными поручениями, согласованием, банковскими адаптерами, интеграцией с T-Банк Sandbox, выписками, сверкой, отчетами и аудитом.
 
-## Run
+## Запуск
 
 ```powershell
 dotnet restore
 dotnet run --project OpenPay.Web
 ```
 
-The app uses SQLite by default: `OpenPay.Web/openpay-dev.db`. On startup it applies EF migrations and seeds demo data.
+По умолчанию приложение использует SQLite-базу `OpenPay.Web/openpay-dev.db`. При старте применяются EF-миграции и создаются демо-данные.
 
-## Demo Users
+Для подготовки демо-базы без запуска web-сервера можно выполнить:
 
-| Role | Login | Password |
+```powershell
+dotnet run --project OpenPay.Web -- --seed-demo
+```
+
+Seed создает пользователей, две организации, банковские подключения, счета, контрагентов, маршруты согласования, платежи в разных статусах, демо-выписку, сверку и аудит.
+
+Состав подготовленных данных описан в `docs/vkr/DEMO_DATA.md`.
+
+## T-Банк Sandbox
+
+В проекте есть отдельный банковский адаптер `TBANK_SANDBOX`. Чтобы использовать песочницу:
+
+1. Откройте `Администрирование -> Банки`.
+2. Создайте новое банковское подключение.
+3. Выберите `Т-Банк Sandbox API`.
+4. Укажите тестовый access token:
+
+```text
+TBankSandboxToken
+```
+
+5. Привяжите это подключение к счету организации.
+
+Настройки endpoint-ов находятся в `OpenPay.Web/appsettings.json`:
+
+```json
+{
+  "TBankSandbox": {
+    "PaymentBaseUrl": "https://business.tbank.ru/openapi/sandbox/secured",
+    "StatementBaseUrl": "https://business.tbank.ru/openapi/sandbox",
+    "DefaultAccessToken": "TBankSandboxToken"
+  }
+}
+```
+
+Проверенные методы песочницы:
+
+- отправка рублевого платежа: `POST /api/v1/payment/ruble-transfer/pay`;
+- проверка статуса платежа: `GET /api/v1/payment/{paymentId}`;
+- получение выписки: `GET /api/v1/bank-statement`.
+
+Если банковский API вернет ошибку, OpenPay сохранит сообщение в статусе платежа и не уронит процесс согласования.
+
+## Демо-пользователи
+
+| Роль | Логин | Пароль |
 | --- | --- | --- |
-| Platform admin | `platformadmin@openpay.local` | `Admin123!` |
-| Organization admin | `admin@openpay.local` | `Admin123!` |
-| Accountant | `accountant@openpay.local` | `Accountant123!` |
-| Manager | `manager@openpay.local` | `Manager123!` |
+| Администратор платформы | `platformadmin@openpay.local` | `Admin123!` |
+| Администратор организации | `admin@openpay.local` | `Admin123!` |
+| Бухгалтер | `accountant@openpay.local` | `Accountant123!` |
+| Руководитель | `manager@openpay.local` | `Manager123!` |
 
-## CSV Formats
+## Форматы CSV
 
-Counterparties:
+Контрагенты:
 
 ```csv
 INN;Name;KPP;BIC;AccountNumber;CorrespondentAccount
@@ -30,20 +75,29 @@ INN;Name;KPP;BIC;AccountNumber;CorrespondentAccount
 500100732259;ООО "Вектор";500101001;044030653;40702810000000000002;30101810500000000653
 ```
 
-Payments:
+Платежи:
 
 ```csv
 DocumentNumber;PaymentDate;CounterpartyInn;OrganizationAccountNumber;Amount;Currency;ExpenseType;Purpose
 PAY-001;15.05.2026;7707083893;40702810000000000007;12500,50;RUB;Поставщики;Оплата поставщику по договору №15
 ```
 
-`DocumentNumber` and `ExpenseType` are optional. The prototype validates INN, KPP, BIC, account control keys, duplicate payments, account currency and active organization scope.
+Поля `DocumentNumber` и `ExpenseType` необязательные. При импорте проверяются ИНН, КПП, БИК, контрольные ключи счетов, дубли платежей, валюта счета и принадлежность данных текущей организации.
 
-## Demo Flow
+## Демо-сценарий
 
-1. Sign in as accountant and create or import a payment.
-2. Send the draft to approval.
-3. Sign in as manager and approve it.
-4. The system simulates signing and sends the payment through a demo bank adapter.
-5. Open `Выписки`, load a demo statement and run reconciliation.
-6. Use `Отчетность` and `Аудит` to inspect totals and history.
+1. Войти под бухгалтером и создать или импортировать платеж.
+2. Отправить платеж на согласование.
+3. Войти под руководителем и утвердить платеж.
+4. Система выполнит имитацию подписи и отправит платеж через выбранный банковский адаптер.
+5. Открыть раздел `Выписки`, загрузить выписку и выполнить сверку.
+6. Проверить итоговые данные в разделах `Отчетность` и `Аудит`.
+
+## Проверка
+
+```powershell
+dotnet build OpenPay.Web\OpenPay.Web.csproj --no-restore
+dotnet test OpenPay.Tests\OpenPay.Tests.csproj --no-restore
+```
+
+На момент последней проверки сборка проходит, а тесты выполняются успешно.

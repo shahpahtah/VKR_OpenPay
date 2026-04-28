@@ -71,6 +71,17 @@ else
         </div>
     </div>
 
+    @if (!Model.IsPlatformAdmin && !string.IsNullOrWhiteSpace(Model.CurrentOrganizationName))
+    {
+        <div class="section-card organization-context mb-4">
+            <div>
+                <div class="kpi-label">Текущая организация</div>
+                <div class="organization-context-title">@Model.CurrentOrganizationName</div>
+                <div class="text-muted">ИНН: @(Model.CurrentOrganizationInn ?? "-")</div>
+            </div>
+        </div>
+    }
+
     @if (Model.IsPlatformAdmin)
     {
         <div class="row g-3 mb-4">

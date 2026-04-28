@@ -31,12 +31,13 @@
             </div>
             <div class="col-md-6">
                 <label asp-for="Item.AccessToken" class="form-label"></label>
-                <input asp-for="Item.AccessToken" class="form-control" />
+                <input asp-for="Item.AccessToken" class="form-control" placeholder="Например, TBankSandboxToken" />
                 <span asp-validation-for="Item.AccessToken" class="text-danger"></span>
             </div>
             <div class="col-md-6">
                 <label asp-for="Item.RefreshToken" class="form-label"></label>
                 <input asp-for="Item.RefreshToken" class="form-control" />
+                <div class="form-text">Для Т-Банк Sandbox можно оставить пустым.</div>
                 <span asp-validation-for="Item.RefreshToken" class="text-danger"></span>
             </div>
             <div class="col-12">
