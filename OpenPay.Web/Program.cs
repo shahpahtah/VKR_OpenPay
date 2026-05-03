@@ -36,7 +36,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/Identity/Account/Login";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
-
 builder.Services.AddScoped<ICounterpartyService, CounterpartyService>();
 builder.Services.AddScoped<IOrganizationBankAccountService, OrganizationBankAccountService>();
 builder.Services.AddScoped<IPaymentOrderService, PaymentOrderService>();
@@ -44,9 +43,8 @@ builder.Services.AddScoped<IApprovalService, ApprovalService>();
 builder.Services.AddScoped<IApprovalRouteService, ApprovalRouteService>();
 builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 builder.Services.AddScoped<IBankProcessingService, BankProcessingService>();
-builder.Services.AddScoped<IBankAdapter, TBankDemoAdapter>();
+builder.Services.AddScoped<IBankAdapter, MockBankAdapter>();
 builder.Services.AddScoped<IBankAdapter, TBankSandboxAdapter>();
-builder.Services.AddScoped<IBankAdapter, SberDemoAdapter>();
 builder.Services.AddScoped<IBankAdapterRegistry, BankAdapterRegistry>();
 builder.Services.AddScoped<IBankGatewayService, BankGatewayService>();
 builder.Services.AddScoped<IBankConnectionService, BankConnectionService>();
@@ -115,7 +113,5 @@ if (seedOnly)
     return;
 
 app.MapRazorPages();
-
 app.Run();
-
 public partial class Program { }

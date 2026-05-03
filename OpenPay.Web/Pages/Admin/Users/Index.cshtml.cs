@@ -7,7 +7,7 @@ using OpenPay.Domain.Enums;
 
 namespace OpenPay.Web.Pages.Admin.Users;
 
-[Authorize(Roles = $"{nameof(UserRole.Administrator)}")]
+[Authorize(Roles = $"{nameof(UserRole.Administrator)},{nameof(UserRole.PlatformAdmin)}")]
 public class IndexModel : PageModel
 {
     private readonly IUserManagementService _userManagementService;

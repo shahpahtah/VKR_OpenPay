@@ -1,83 +1,57 @@
-﻿@page
-@model OpenPay.Web.Pages.Admin.Organizations.IndexModel
+@page "{id}"
+@model OpenPay.Web.Pages.Admin.Users.EditModel
 @{
-    ViewData["Title"] = "Организации";
+    ViewData["Title"] = "Редактирование сотрудника";
 }
 
 <div class="page-actions">
     <div>
-        <h2 class="mb-1">Организации</h2>
-        <div class="text-muted">Управление компаниями и их статусом в системе</div>
+        <h2 class="mb-1">Редактирование сотрудника</h2>
+        <div class="text-muted">Изменение данных, роли и активности пользователя</div>
     </div>
 
-    <div>
-        <a asp-page="Create" class="btn btn-primary">Создать организацию</a>
-    </div>
+    <a asp-page="Index" class="btn btn-outline-secondary">Назад к списку</a>
 </div>
 
 <div class="section-card">
-    @if (Model.Items.Count == 0)
-    {
-        <div class="empty-state">
-            <h5 class="mb-2">Организации не найдены</h5>
-            <div class="mb-3">Создайте первую организацию для начала работы.</div>
-            <a asp-page="Create" class="btn btn-primary">Создать организацию</a>
+    <form method="post">
+        <input asp-for="Item.Id" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="Item.FullName" class="form-label"></label>
+                <input asp-for="Item.FullName" class="form-control" autocomplete="name" />
+                <span asp-validation-for="Item.FullName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Item.Email" class="form-label"></label>
+                <input asp-for="Item.Email" class="form-control" autocomplete="email" />
+                <span asp-validation-for="Item.Email" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Item.Role" class="form-label"></label>
+                <select asp-for="Item.Role" asp-items="Model.RoleOptions" class="form-select"></select>
+                <span asp-validation-for="Item.Role" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 d-flex align-items-end">
+                <div class="form-check">
+                    <input asp-for="Item.IsActive" class="form-check-input" />
+                    <label asp-for="Item.IsActive" class="form-check-label"></label>
+                </div>
+            </div>
         </div>
-    }
-    else
-    {
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th>Название</th>
-                        <th>ИНН</th>
-                        <th>КПП</th>
-                        <th>Статус</th>
-                        <th style="width: 220px;">Действия</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Items)
-                    {
-                        <tr>
-                            <td class="fw-semibold">@item.Name</td>
-                            <td>@item.Inn</td>
-                            <td>@item.Kpp</td>
-                            <td>
-                                @if (item.IsActive)
-                                {
-                                    <span class="badge bg-success">Активна</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-secondary">Неактивна</span>
-                                }
-                            </td>
-                            <td>
-                                <div class="d-flex flex-wrap gap-2">
-                                    @if (item.IsActive)
-                                    {
-                                        <form method="post" asp-page-handler="Deactivate" asp-route-id="@item.Id" class="d-inline">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                Деактивировать
-                                            </button>
-                                        </form>
-                                    }
-                                    else
-                                    {
-                                        <form method="post" asp-page-handler="Activate" asp-route-id="@item.Id" class="d-inline">
-                                            <button type="submit" class="btn btn-sm btn-outline-success">
-                                                Активировать
-                                            </button>
-                                        </form>
-                                    }
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+            <a asp-page="Index" class="btn btn-outline-secondary">Отмена</a>
         </div>
-    }
+    </form>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

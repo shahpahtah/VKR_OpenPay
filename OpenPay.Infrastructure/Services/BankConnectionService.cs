@@ -38,10 +38,13 @@ public class BankConnectionService : IBankConnectionService
         var organizationId = await _currentOrganizationService.GetRequiredOrganizationIdAsync();
         var adapters = _bankAdapterRegistry.GetAvailableAdapters()
             .ToDictionary(x => x.BankCode, x => x.DisplayName, StringComparer.OrdinalIgnoreCase);
+        var availableBankCodes = adapters.Keys.ToList();
 
         var query = _dbContext.BankConnections
             .AsNoTracking()
-            .Where(x => x.OrganizationId == organizationId);
+            .Where(x =>
+                x.OrganizationId == organizationId &&
+                availableBankCodes.Contains(x.BankCode));
 
         if (!includeInactive)
             query = query.Where(x => x.IsActive);

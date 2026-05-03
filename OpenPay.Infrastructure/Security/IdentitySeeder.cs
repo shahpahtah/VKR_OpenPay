@@ -126,14 +126,14 @@ public static class IdentitySeeder
         ApplicationUser accountant,
         ApplicationUser manager)
     {
-        var tbankConnection = await EnsureBankConnectionAsync(
+        var mockConnection = await EnsureBankConnectionAsync(
             dbContext,
             tokenProtectionService,
             organization.Id,
-            "TBANK",
-            "Основное подключение Т-Банк",
-            "demo-tbank-access-token",
-            "demo-tbank-refresh-token");
+            "MOCK",
+            "Основное подключение Mock Bank",
+            "mock-access-token",
+            "mock-refresh-token");
 
         var tbankSandboxConnection = await EnsureBankConnectionAsync(
             dbContext,
@@ -144,14 +144,7 @@ public static class IdentitySeeder
             "TBankSandboxToken",
             string.Empty);
 
-        var sberConnection = await EnsureBankConnectionAsync(
-            dbContext,
-            tokenProtectionService,
-            organization.Id,
-            "SBER",
-            "Резервное подключение Сбербанк",
-            "demo-sber-access-token",
-            "demo-sber-refresh-token");
+        await RemoveUnsupportedBankConnectionsAsync(dbContext, organization.Id, mockConnection.Id, "MOCK", "TBANK_SANDBOX");
 
         var sandboxAccount = await EnsureBankAccountAsync(
             dbContext,
@@ -163,23 +156,23 @@ public static class IdentitySeeder
             "RUB",
             "Бухгалтерия");
 
-        var tbankDemoAccount = await EnsureBankAccountAsync(
+        var mockAccount = await EnsureBankAccountAsync(
             dbContext,
             organization.Id,
-            tbankConnection.Id,
+            mockConnection.Id,
             "044525225",
             "40702810000000000023",
-            "Т-Банк Demo",
+            "Mock Bank",
             "RUB",
             "Бухгалтерия");
 
-        var sberAccount = await EnsureBankAccountAsync(
+        var procurementDemoAccount = await EnsureBankAccountAsync(
             dbContext,
             organization.Id,
-            sberConnection.Id,
-            "044030653",
-            "40702810000000000002",
-            "Сбербанк Demo",
+            mockConnection.Id,
+            "044525225",
+            "40702810000000000036",
+            "Mock Bank Закупки",
             "RUB",
             "Закупки");
 
@@ -199,9 +192,9 @@ public static class IdentitySeeder
             "500100732259",
             "500101001",
             "ООО \"Вектор\"",
-            "044030653",
-            "40702810000000000028",
-            "30101810500000000653");
+            "044525225",
+            "40702810000000000049",
+            "30101810400000000225");
 
         var sever = await EnsureCounterpartyAsync(
             dbContext,
@@ -294,7 +287,7 @@ public static class IdentitySeeder
             "PAY-DEMO-003",
             today.AddDays(1),
             vector.Id,
-            sberAccount.Id,
+            procurementDemoAccount.Id,
             procurementRoute.Id,
             accountant.Id,
             48600m,
@@ -335,7 +328,7 @@ public static class IdentitySeeder
             "PAY-DEMO-005",
             today.AddDays(-2),
             vector.Id,
-            sberAccount.Id,
+            procurementDemoAccount.Id,
             standardRoute.Id,
             accountant.Id,
             15900m,
@@ -356,7 +349,7 @@ public static class IdentitySeeder
             "PAY-DEMO-006",
             today.AddDays(5),
             sever.Id,
-            tbankDemoAccount.Id,
+            mockAccount.Id,
             standardRoute.Id,
             accountant.Id,
             8800m,
@@ -373,7 +366,7 @@ public static class IdentitySeeder
             "PAY-DEMO-007",
             today.AddDays(7),
             vector.Id,
-            sberAccount.Id,
+            procurementDemoAccount.Id,
             largeRoute.Id,
             accountant.Id,
             240000m,
@@ -754,24 +747,79 @@ public static class IdentitySeeder
     {
         var connection = await dbContext.BankConnections
             .FirstOrDefaultAsync(x => x.OrganizationId == organizationId && x.BankCode == bankCode);
+        var shouldSeedTokens = false;
 
-        if (connection != null)
-            return connection;
-
-        connection = new BankConnection
+        if (connection == null && bankCode == "MOCK")
         {
-            OrganizationId = organizationId,
-            BankCode = bankCode,
-            DisplayName = displayName,
-            ProtectedAccessToken = tokenProtectionService.Protect(accessToken),
-            ProtectedRefreshToken = tokenProtectionService.Protect(refreshToken),
-            IsActive = true
-        };
+            connection = await dbContext.BankConnections
+                .FirstOrDefaultAsync(x => x.OrganizationId == organizationId && x.BankCode == "TBANK");
 
-        dbContext.BankConnections.Add(connection);
+            shouldSeedTokens = connection != null;
+        }
+
+        if (connection == null)
+        {
+            connection = new BankConnection
+            {
+                OrganizationId = organizationId,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            dbContext.BankConnections.Add(connection);
+            shouldSeedTokens = true;
+        }
+
+        connection.BankCode = bankCode;
+        connection.DisplayName = displayName;
+        connection.IsActive = true;
+        connection.UpdatedAt = DateTime.UtcNow;
+
+        if (shouldSeedTokens || string.IsNullOrWhiteSpace(connection.ProtectedAccessToken))
+        {
+            connection.ProtectedAccessToken = tokenProtectionService.Protect(accessToken);
+            connection.ProtectedRefreshToken = tokenProtectionService.Protect(refreshToken);
+        }
+
         await dbContext.SaveChangesAsync();
 
         return connection;
+    }
+
+    private static async Task RemoveUnsupportedBankConnectionsAsync(
+        OpenPayDbContext dbContext,
+        Guid organizationId,
+        Guid fallbackBankConnectionId,
+        params string[] supportedBankCodes)
+    {
+        var unsupportedConnections = await dbContext.BankConnections
+            .Where(x =>
+                x.OrganizationId == organizationId &&
+                !supportedBankCodes.Contains(x.BankCode))
+            .ToListAsync();
+
+        if (unsupportedConnections.Count == 0)
+            return;
+
+        var unsupportedConnectionIds = unsupportedConnections
+            .Select(x => x.Id)
+            .ToList();
+
+        var accountsToRelink = await dbContext.OrganizationBankAccounts
+            .Where(x =>
+                x.OrganizationId == organizationId &&
+                x.BankConnectionId.HasValue &&
+                unsupportedConnectionIds.Contains(x.BankConnectionId.Value))
+            .ToListAsync();
+
+        foreach (var account in accountsToRelink)
+        {
+            account.BankConnectionId = fallbackBankConnectionId;
+            account.BankName = "Mock Bank";
+        }
+
+        dbContext.BankConnections.RemoveRange(unsupportedConnections);
+
+        await dbContext.SaveChangesAsync();
     }
 
     private static async Task<ApplicationUser> EnsureUserAsync(
@@ -845,9 +893,40 @@ public static class IdentitySeeder
             }
         }
 
-        if (!await userManager.IsInRoleAsync(user, role.ToString()))
-            await userManager.AddToRoleAsync(user, role.ToString());
+        await SyncApplicationRoleAsync(userManager, user, role);
 
         return user;
+    }
+
+    private static async Task SyncApplicationRoleAsync(
+        UserManager<ApplicationUser> userManager,
+        ApplicationUser user,
+        UserRole role)
+    {
+        var applicationRoles = Enum.GetNames<UserRole>();
+        var currentRoles = await userManager.GetRolesAsync(user);
+        var rolesToRemove = currentRoles
+            .Where(x => applicationRoles.Contains(x, StringComparer.Ordinal))
+            .ToList();
+
+        if (rolesToRemove.Count > 0)
+        {
+            var removeResult = await userManager.RemoveFromRolesAsync(user, rolesToRemove);
+
+            if (!removeResult.Succeeded)
+            {
+                var errors = string.Join("; ", removeResult.Errors.Select(e => e.Description));
+                throw new InvalidOperationException($"Не удалось синхронизировать роли пользователя {user.Email}: {errors}");
+            }
+        }
+
+        var roleName = role.ToString();
+        var addResult = await userManager.AddToRoleAsync(user, roleName);
+
+        if (!addResult.Succeeded)
+        {
+            var errors = string.Join("; ", addResult.Errors.Select(e => e.Description));
+            throw new InvalidOperationException($"Не удалось назначить роль {roleName} пользователю {user.Email}: {errors}");
+        }
     }
 }

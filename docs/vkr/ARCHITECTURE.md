@@ -31,8 +31,7 @@ flowchart LR
     Infra --> Db["SQLite / EF Core"]
     Infra --> Protection["ASP.NET Data Protection"]
     Infra --> Registry["IBankAdapterRegistry"]
-    Registry --> TBankDemo["TBankDemoAdapter"]
-    Registry --> SberDemo["SberDemoAdapter"]
+    Registry --> MockBank["MockBankAdapter"]
     Registry --> TBankSandbox["TBankSandboxAdapter"]
     TBankSandbox --> TBankApi["T-Банк Sandbox API"]
 ```
@@ -201,16 +200,16 @@ classDiagram
         CheckPaymentStatusAsync(payment)
     }
 
-    class TBankDemoAdapter
-    class SberDemoAdapter
+    class MockBankAdapter
     class TBankSandboxAdapter
 
-    IBankAdapter <|.. TBankDemoAdapter
-    IBankAdapter <|.. SberDemoAdapter
+    IBankAdapter <|.. MockBankAdapter
     IBankAdapter <|.. TBankSandboxAdapter
     BankGatewayService --> IBankAdapterRegistry
     IBankAdapterRegistry --> IBankAdapter
 ```
+
+Новые банки подключаются добавлением новых классов-адаптеров, реализующих `IBankAdapter`, без изменения основной бизнес-логики платежей.
 
 ## Последовательность платежа
 

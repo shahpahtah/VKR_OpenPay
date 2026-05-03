@@ -5,20 +5,20 @@ using OpenPay.Domain.Enums;
 
 namespace OpenPay.Infrastructure.Banking;
 
-public class SberDemoAdapter : IBankAdapter
+public class MockBankAdapter : IBankAdapter
 {
-    public string BankCode => "SBER";
-    public string DisplayName => "Сбербанк Demo API";
+    public string BankCode => "MOCK";
+    public string DisplayName => "Mock Bank (заглушка)";
 
     public Task<BankSubmitResultDto> SubmitPaymentAsync(PaymentOrder payment, BankConnection connection)
     {
-        var reference = $"SB-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid():N}"[..32];
+        var reference = $"MK-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid():N}"[..32];
 
         return Task.FromResult(new BankSubmitResultDto
         {
             IsAccepted = true,
             ReferenceId = reference,
-            Message = "Сбербанк принял платеж к обработке."
+            Message = "Mock Bank принял платеж к обработке."
         });
     }
 
@@ -31,8 +31,8 @@ public class SberDemoAdapter : IBankAdapter
         {
             FinalStatus = hasErrorMarker ? PaymentStatus.Error : PaymentStatus.Executed,
             Message = hasErrorMarker
-                ? "Сбербанк отклонил платеж в демо-сценарии."
-                : "Сбербанк исполнил платеж в демо-сценарии."
+                ? "Mock Bank отклонил платеж в тестовом сценарии."
+                : "Mock Bank исполнил платеж в тестовом сценарии."
         });
     }
 
@@ -46,13 +46,13 @@ public class SberDemoAdapter : IBankAdapter
         [
             new()
             {
-                OperationId = $"SB-DEMO-{periodTo:yyyyMMdd}",
+                OperationId = $"MOCK-STMT-{periodTo:yyyyMMdd}",
                 OperationDate = periodTo,
-                Amount = 2750,
+                Amount = 1990,
                 Currency = account.Currency,
-                CounterpartyName = "Демо-операция Сбербанк",
-                CounterpartyAccountNumber = "40702810888888888888",
-                Purpose = "Несопоставленная операция из демо-выписки"
+                CounterpartyName = "Mock-операция",
+                CounterpartyAccountNumber = "40702810999999999999",
+                Purpose = "Несопоставленная операция из mock-выписки"
             }
         ];
 

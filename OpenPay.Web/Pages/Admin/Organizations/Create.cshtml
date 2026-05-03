@@ -1,83 +1,81 @@
-﻿@page
-@model OpenPay.Web.Pages.Admin.Organizations.IndexModel
+@page
+@model OpenPay.Web.Pages.Admin.Organizations.CreateModel
 @{
-    ViewData["Title"] = "Организации";
+    ViewData["Title"] = "Новая организация";
 }
 
 <div class="page-actions">
     <div>
-        <h2 class="mb-1">Организации</h2>
-        <div class="text-muted">Управление компаниями и их статусом в системе</div>
+        <h2 class="mb-1">Новая организация</h2>
+        <div class="text-muted">Создание организации и первого администратора</div>
     </div>
 
-    <div>
-        <a asp-page="Create" class="btn btn-primary">Создать организацию</a>
-    </div>
+    <a asp-page="Index" class="btn btn-outline-secondary">Назад к списку</a>
 </div>
 
 <div class="section-card">
-    @if (Model.Items.Count == 0)
-    {
-        <div class="empty-state">
-            <h5 class="mb-2">Организации не найдены</h5>
-            <div class="mb-3">Создайте первую организацию для начала работы.</div>
-            <a asp-page="Create" class="btn btn-primary">Создать организацию</a>
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="row g-3">
+            <div class="col-md-12">
+                <h5 class="mb-0">Реквизиты организации</h5>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Item.Name" class="form-label"></label>
+                <input asp-for="Item.Name" class="form-control" />
+                <span asp-validation-for="Item.Name" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-3">
+                <label asp-for="Item.Inn" class="form-label"></label>
+                <input asp-for="Item.Inn" class="form-control" />
+                <span asp-validation-for="Item.Inn" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-3">
+                <label asp-for="Item.Kpp" class="form-label"></label>
+                <input asp-for="Item.Kpp" class="form-control" />
+                <span asp-validation-for="Item.Kpp" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-12 mt-3">
+                <h5 class="mb-0">Администратор организации</h5>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Item.AdminFullName" class="form-label"></label>
+                <input asp-for="Item.AdminFullName" class="form-control" autocomplete="name" />
+                <span asp-validation-for="Item.AdminFullName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Item.AdminEmail" class="form-label"></label>
+                <input asp-for="Item.AdminEmail" class="form-control" autocomplete="email" />
+                <span asp-validation-for="Item.AdminEmail" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Item.AdminPassword" class="form-label"></label>
+                <input asp-for="Item.AdminPassword" class="form-control" autocomplete="new-password" />
+                <span asp-validation-for="Item.AdminPassword" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Item.ConfirmAdminPassword" class="form-label"></label>
+                <input asp-for="Item.ConfirmAdminPassword" class="form-control" autocomplete="new-password" />
+                <span asp-validation-for="Item.ConfirmAdminPassword" class="text-danger"></span>
+            </div>
         </div>
-    }
-    else
-    {
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th>Название</th>
-                        <th>ИНН</th>
-                        <th>КПП</th>
-                        <th>Статус</th>
-                        <th style="width: 220px;">Действия</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Items)
-                    {
-                        <tr>
-                            <td class="fw-semibold">@item.Name</td>
-                            <td>@item.Inn</td>
-                            <td>@item.Kpp</td>
-                            <td>
-                                @if (item.IsActive)
-                                {
-                                    <span class="badge bg-success">Активна</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-secondary">Неактивна</span>
-                                }
-                            </td>
-                            <td>
-                                <div class="d-flex flex-wrap gap-2">
-                                    @if (item.IsActive)
-                                    {
-                                        <form method="post" asp-page-handler="Deactivate" asp-route-id="@item.Id" class="d-inline">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                Деактивировать
-                                            </button>
-                                        </form>
-                                    }
-                                    else
-                                    {
-                                        <form method="post" asp-page-handler="Activate" asp-route-id="@item.Id" class="d-inline">
-                                            <button type="submit" class="btn btn-sm btn-outline-success">
-                                                Активировать
-                                            </button>
-                                        </form>
-                                    }
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Создать организацию</button>
+            <a asp-page="Index" class="btn btn-outline-secondary">Отмена</a>
         </div>
-    }
+    </form>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

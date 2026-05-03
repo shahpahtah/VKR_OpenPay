@@ -79,14 +79,7 @@ public class UserManagementService : IUserManagementService
             throw new InvalidOperationException($"Не удалось создать пользователя: {errors}");
         }
 
-        var roleName = dto.Role.ToString();
-        var roleResult = await _userManager.AddToRoleAsync(user, roleName);
-
-        if (!roleResult.Succeeded)
-        {
-            var errors = string.Join("; ", roleResult.Errors.Select(e => e.Description));
-            throw new InvalidOperationException($"Не удалось назначить роль: {errors}");
-        }
+        await SyncApplicationRoleAsync(user, dto.Role);
     }
 
     public async Task<UpdateUserDto?> GetByIdAsync(string id)
@@ -143,23 +136,7 @@ public class UserManagementService : IUserManagementService
             throw new InvalidOperationException($"Не удалось обновить пользователя: {errors}");
         }
 
-        var existingRoles = await _userManager.GetRolesAsync(user);
-        if (existingRoles.Count > 0)
-        {
-            var removeRolesResult = await _userManager.RemoveFromRolesAsync(user, existingRoles);
-            if (!removeRolesResult.Succeeded)
-            {
-                var errors = string.Join("; ", removeRolesResult.Errors.Select(e => e.Description));
-                throw new InvalidOperationException($"Не удалось обновить роли пользователя: {errors}");
-            }
-        }
-
-        var addRoleResult = await _userManager.AddToRoleAsync(user, dto.Role.ToString());
-        if (!addRoleResult.Succeeded)
-        {
-            var errors = string.Join("; ", addRoleResult.Errors.Select(e => e.Description));
-            throw new InvalidOperationException($"Не удалось назначить новую роль: {errors}");
-        }
+        await SyncApplicationRoleAsync(user, dto.Role);
 
         await ApplyActivationStateAsync(user, dto.IsActive);
     }
@@ -217,6 +194,35 @@ public class UserManagementService : IUserManagementService
         {
             var errors = string.Join("; ", result.Errors.Select(e => e.Description));
             throw new InvalidOperationException($"Не удалось изменить активность пользователя: {errors}");
+        }
+    }
+
+    private async Task SyncApplicationRoleAsync(ApplicationUser user, UserRole role)
+    {
+        var applicationRoles = Enum.GetNames<UserRole>();
+        var existingRoles = await _userManager.GetRolesAsync(user);
+        var rolesToRemove = existingRoles
+            .Where(x => applicationRoles.Contains(x, StringComparer.Ordinal))
+            .ToList();
+
+        if (rolesToRemove.Count > 0)
+        {
+            var removeRolesResult = await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+
+            if (!removeRolesResult.Succeeded)
+            {
+                var errors = string.Join("; ", removeRolesResult.Errors.Select(e => e.Description));
+                throw new InvalidOperationException($"Не удалось обновить роли пользователя: {errors}");
+            }
+        }
+
+        var roleName = role.ToString();
+        var addRoleResult = await _userManager.AddToRoleAsync(user, roleName);
+
+        if (!addRoleResult.Succeeded)
+        {
+            var errors = string.Join("; ", addRoleResult.Errors.Select(e => e.Description));
+            throw new InvalidOperationException($"Не удалось назначить роль {roleName}: {errors}");
         }
     }
 }
